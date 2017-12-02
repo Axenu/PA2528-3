@@ -27,6 +27,21 @@ SharedPtr<T>& SharedPtr<T>::operator=(T* other) {
     return *this;
 }
 
+template<typename T>
+T& SharedPtr<T>::operator*() const {
+    return *mPtr;
+}
+
+template<typename T>
+T* SharedPtr<T>::operator->() const {
+    return mPtr;
+}
+
+template<typename T>
+bool SharedPtr<T>::operator==(const SharedPtr<T>& other) const {
+    return mPtr == other.mPtr;
+}
+
 
 template<typename T>
 size_t SharedPtr<T>::getReferenceCount() const {
