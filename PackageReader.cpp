@@ -16,6 +16,6 @@ Mesh* PackageReader::loadMesh(gui_t gui) {
 }
 
 // Return array of all GUIs in the package.
-Array<gui_t> PackageReader::getGuis() {
-    return Array<gui_t>();
+Array<PackageReader::MetaData> PackageReader::getMetaData() {
+    return Array<MetaData>();
 }

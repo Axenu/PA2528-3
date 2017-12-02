@@ -15,6 +15,18 @@ class Mesh;
 // the person responsible for developing the PackageReader.
 class PackageReader {
     public:
+        struct MetaData {
+            enum class Type : char {
+                TEXTURE,
+                MESH,
+                INVALID,
+            };
+
+            Type type = Type::INVALID;
+            gui_t gui = 0;
+        };
+
+    public:
         // Return true if package is found and valid. Else false.
         static bool setPackage(const char* path);
 
@@ -24,8 +36,8 @@ class PackageReader {
         // Return pointer to mesh resource with specified GUI. Return nullptr if not found.
         static Mesh* loadMesh(gui_t gui);
 
-        // Return array of all GUIs in the package.
-        static Array<gui_t> getGuis();
+        // Return metadata of every resource in the package.
+        static Array<MetaData> getMetaData();
 
 };
 
