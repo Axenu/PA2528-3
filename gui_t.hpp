@@ -3,7 +3,7 @@
 
 #include <cstring>
 
-using gui_t = size_t;
+using gui_t = uint32_t;
 
 
 #endif // __GUI_T__
