@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Array.hpp"
+#include "gui_t.hpp"
 
 class Texture;
 class Mesh;
