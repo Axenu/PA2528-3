@@ -3,27 +3,23 @@
 
 #include "Thread.hpp"
 
-namespace FuturePrivate {
-    struct Block {
-        void* ret = nullptr;
-        void* args = nullptr;
-        void* (*function)(void*) = nullptr;
-    };
-    void entry(void* block);
-}
-
-template<typename Return>
+template<typename T>
 class Future {
     public:
-        Future(Return* (*function)(void*), void* args);
+        template<typename Function>
+        Future(const Function& function);
 
-        // Returns true if future is ready. Else false.
-        bool wait(size_t milliseconds = 0);
-        Return* get();
+        ~Future();
+
+        // Wait forever if 0.
+        bool wait(size_t milliseconds = 0) const;
+        bool isReady() const;
+        T get() const;
 
     private:
-        FuturePrivate::Block mBlock;
         Thread mThread;
+        T mPromise;
+        volatile bool mIsReady = false;
 };
 
 #include "Future.inl"

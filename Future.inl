@@ -1,17 +1,35 @@
-template<typename Return>
-Future<Return>::Future(Return* (*function)(void*), void* args) : mThread(FuturePrivate::entry) {
-    mBlock.args = args;
-    mBlock.function = (void* (*)(void*))function;
-    mThread.run((void*)&mBlock);
+#include <cassert>
+
+template<typename T>
+template<typename Function>
+Future<T>::Future(const Function& function)
+: mThread([this, function](){mPromise = function(); mIsReady = true;}) {
 }
 
-template<typename Return>
-bool Future<Return>::wait(size_t milliseconds) {
+template<typename T>
+Future<T>::~Future() {
+    mThread.join();
+}
+
+template<typename T>
+bool Future<T>::wait(size_t milliseconds) const {
+    if(mIsReady) {
+        return true;
+    }
     return mThread.wait(milliseconds);
 }
 
-template<typename Return>
-Return* Future<Return>::get() {
-    mThread.join();
-    return (Return*)mBlock.ret;
+template<typename T>
+bool Future<T>::isReady() const {
+    return mIsReady;
+}
+
+template<typename T>
+T Future<T>::get() const {
+    if(mIsReady) {
+        return mPromise;
+    }
+    while(!wait(1000));
+    assert(mIsReady);
+    return mPromise;
 }

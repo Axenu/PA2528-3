@@ -3,21 +3,23 @@
 
 #include <cstring>
 
+#include "Functor.hpp"
+
+
 class Thread {
     public:
-        Thread(void (*function)(void*));
-
-        void run(void* args);
+        Thread(const Functor& function);
+        void run();
         void join();
 
         // Returns true if thread is terminated. Else false.
-        bool wait(size_t milliseconds = 0);
+        bool wait(size_t milliseconds = 0) const;
 
     private:
-        void* createThread(void* args) const;
+        void* createThread() const;
 
     private:
-        void (*mFunction)(void* args) = nullptr;
+        Functor mFunction;
         void* mThreadHandle = nullptr;
 };
 

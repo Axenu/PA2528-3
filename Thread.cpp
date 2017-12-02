@@ -1,12 +1,11 @@
 #include "Thread.hpp"
 
 
-Thread::Thread(void (*function)(void* args)) : mFunction(function){
-
+Thread::Thread(const Functor& function) : mFunction(function) {
 }
 
-void Thread::run(void* args) {
-    mThreadHandle = createThread(args);
+void Thread::run() {
+    mThreadHandle = createThread();
 }
 
 void Thread::join() {
@@ -19,10 +18,11 @@ void Thread::join() {
     // close handle
 }
 
-bool Thread::wait(size_t milliseconds) {
+bool Thread::wait(size_t milliseconds) const {
     return true;
 }
 
-void* Thread::createThread(void* args) const {
+void* Thread::createThread() const {
+    mFunction();
     return nullptr;
 }
