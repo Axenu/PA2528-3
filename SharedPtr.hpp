@@ -2,6 +2,7 @@
 #define __SHARED_PTR__
 
 #include <atomic>
+#include <cstring>
 
 template<typename T>
 class SharedPtr {
