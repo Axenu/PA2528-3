@@ -17,6 +17,8 @@ class SharedPtr {
         T& operator*() const;
         T* operator->() const;
         bool operator==(const SharedPtr<T>& other) const;
+        bool operator!=(const SharedPtr<T>& other) const;
+        operator bool() const;
 
 
         size_t getReferenceCount() const;

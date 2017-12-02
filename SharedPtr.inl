@@ -42,6 +42,15 @@ bool SharedPtr<T>::operator==(const SharedPtr<T>& other) const {
     return mPtr == other.mPtr;
 }
 
+template<typename T>
+bool SharedPtr<T>::operator!=(const SharedPtr<T>& other) const {
+    return mPtr != other.mPtr;
+}
+
+template<typename T>
+SharedPtr<T>::operator bool() const {
+    return mPtr;
+}
 
 template<typename T>
 size_t SharedPtr<T>::getReferenceCount() const {
