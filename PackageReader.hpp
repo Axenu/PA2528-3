@@ -2,6 +2,7 @@
 #define __PACKAGE_READER__
 
 #include <string>
+#include "Array.hpp"
 
 class Texture;
 class Mesh;
@@ -21,6 +22,9 @@ class PackageReader {
 
         // Return pointer to mesh resource with specified GUI. Return nullptr if not found.
         static Mesh* loadMesh(gui_t gui);
+
+        // Return array of all GUIs in the package.
+        static Array<gui_t> getGuis();
 
 };
 
