@@ -1,10 +1,14 @@
 #ifndef __RESOURCE_MANAGER__
 #define __RESOURCE_MANAGER__
 
+#include <atomic>
+
 #include "gui_t.hpp"
 #include "SharedPtr.hpp"
 #include "Texture.hpp"
 #include "Mesh.hpp"
+#include "HashMap.hpp"
+#include "SpinLock.hpp"
 
 // Asynchronous operations are handled by the ResourceManager. Not the PackageReader.
 class ResourceManager {
@@ -33,6 +37,14 @@ class ResourceManager {
         static aloadMesh(gui_t gui, Callback<Mesh> callback);
 
 
+    private:
+        template<typename T>
+        struct Entry {
+            SpinLock lock;
+            SharedPtr<T> data;
+        };
+        static HashMap<gui_t, Entry<Texture>*> mTextures;
+        static HashMap<gui_t, Entry<Mesh>*> mMeshes;
 
 };
 
