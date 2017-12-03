@@ -10,7 +10,7 @@ class FunctorHelperBase {
 template<typename Function>
 class FunctorHelper : public FunctorHelperBase {
     public:
-        FunctorHelper(Function function);
+        FunctorHelper(const Function& function);
         virtual void operator()() override;
     private:
         Function mFunction;

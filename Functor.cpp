@@ -1,9 +1,5 @@
 #include "Functor.hpp"
 
-Functor::~Functor() {
-    delete mFunction;
-}
-
 void Functor::operator()() {
     mFunction->operator()();
 }

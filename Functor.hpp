@@ -2,19 +2,18 @@
 #define __FUNCTOR__
 
 #include "FunctorHelper.hpp"
+#include "SharedPtr.hpp"
 
 class Functor {
     public:
         template<typename Function>
-        Functor(Function function);
-
-        ~Functor();
+        Functor(const Function& function);
 
         void operator()();
         void operator()() const;
 
     private:
-        FunctorHelperBase* const mFunction;
+        SharedPtr<FunctorHelperBase> mFunction;
 };
 
 #include "Functor.inl"
