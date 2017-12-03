@@ -6,6 +6,10 @@ HashMap<gui_t, ResourceManager::Entry<Mesh>*> ResourceManager::mMeshes;
 
 void ResourceManager::initialize() {
     Array<PackageReader::MetaData> metaData = PackageReader::getMetaData();
+    metaData.data = new PackageReader::MetaData();
+    metaData.data->type = PackageReader::MetaData::Type::TEXTURE;
+    metaData.data->gui = 0;
+    metaData.size = 1;
     for(size_t i = 0; i < metaData.size; i++) {
         const PackageReader::MetaData& d = metaData.data[i];
         using T = PackageReader::MetaData::Type;
@@ -15,6 +19,7 @@ void ResourceManager::initialize() {
             default:            break;
         }
     }
+    delete metaData.data;
 }
 
 SharedPtr<Texture> ResourceManager::loadTexture(gui_t gui) {
@@ -53,4 +58,15 @@ SharedPtr<Texture> ResourceManager::loadTexture(gui_t gui) {
 
 SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
     return SharedPtr<Mesh>();
+}
+
+
+void ResourceManager::garbageCollectTextures() {
+    for(Entry<Texture>* entry : mTextures) {
+        entry->lock.lock();
+        if(entry->data.getReferenceCount() == 1) {
+            entry->data = nullptr;
+        }
+        entry->lock.unlock();
+    }
 }

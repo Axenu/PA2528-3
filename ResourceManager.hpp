@@ -36,6 +36,8 @@ class ResourceManager {
         static aloadTexture(gui_t gui, Callback<Texture> callback);
         static aloadMesh(gui_t gui, Callback<Mesh> callback);
 
+        static void garbageCollectTextures();
+
 
     private:
         template<typename T>
