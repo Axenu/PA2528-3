@@ -1,5 +1,8 @@
 #include "PackageReader.hpp"
 
+#include "Texture.hpp"
+#include "Mesh.hpp"
+
 // Return true if package is found and valid. Else false.
 bool PackageReader::setPackage(const char* path) {
     return false;
@@ -7,12 +10,12 @@ bool PackageReader::setPackage(const char* path) {
 
 // Return pointer to texture resource with specified GUI. Return nullptr if not found.
 Texture* PackageReader::loadTexture(gui_t gui) {
-    return nullptr;
+    return new Texture();
 }
 
 // Return pointer to mesh resource with specified GUI. Return nullptr if not found.
 Mesh* PackageReader::loadMesh(gui_t gui) {
-    return nullptr;
+    return new Mesh();
 }
 
 // Return array of all GUIs in the package.
