@@ -9,6 +9,8 @@
 class Thread {
     public:
         Thread(const Functor& function);
+        ~Thread();
+
         void run();
         void join();
 
