@@ -48,6 +48,24 @@ void HashMap<Key, Value>::erase(const Key& key) {
 }
 
 template<typename Key, typename Value>
+typename HashMap<Key, Value>::Iterator HashMap<Key, Value>::begin() {
+    Iterator it;
+    it.mMap = this;
+    it.mTableIndex = 0;
+    it.mEntry = mTable[it.mTableIndex];
+    return it;
+}
+
+template<typename Key, typename Value>
+typename HashMap<Key, Value>::Iterator HashMap<Key, Value>::end() {
+    Iterator it;
+    it.mMap = this;
+    it.mTableIndex = TABLE_SIZE;
+    it.mEntry = nullptr;
+    return it;
+}
+
+template<typename Key, typename Value>
 constexpr size_t HashMap<Key, Value>::hash(const Key& key) {
     return HASHER(key) & (TABLE_SIZE - 1);
 }
