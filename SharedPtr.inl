@@ -78,8 +78,7 @@ T* SharedPtr<T>::assign(T* other) {
 
 template<typename T>
 void SharedPtr<T>::destroy() {
-    mReferenceCount->operator--();
-    if(getReferenceCount() == 0) {
+    if(mReferenceCount->operator--() == 0) {
         delete mReferenceCount;
         if(mPtr) {
             delete mPtr;
