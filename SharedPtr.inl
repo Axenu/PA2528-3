@@ -57,6 +57,11 @@ size_t SharedPtr<T>::getReferenceCount() const {
     return mReferenceCount->load();
 }
 
+template<typename T>
+T* SharedPtr<T>::get() const {
+    return mPtr;
+}
+
 
 template<typename T>
 T* SharedPtr<T>::assign(const SharedPtr<T>& other) {

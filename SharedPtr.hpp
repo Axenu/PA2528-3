@@ -22,6 +22,7 @@ class SharedPtr {
 
 
         size_t getReferenceCount() const;
+        T* get() const;
 
 
     private:
