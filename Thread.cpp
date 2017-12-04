@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <cassert>
 
-Thread::Thread(const Functor& function) : mFunction(function) {
+Thread::Thread(const Function<void()>& function) : mFunction(function) {
 }
 
 Thread::~Thread() {
@@ -34,7 +34,7 @@ bool Thread::wait(size_t milliseconds) const {
 
 namespace ThreadPrivate {
     DWORD WINAPI entry(void* args) {
-        ((Functor*)args)->operator()();
+        ((Function<void()>*)args)->operator()();
         return 0;
     }
 }
