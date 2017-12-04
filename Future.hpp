@@ -2,14 +2,15 @@
 #define __FUTURE__
 
 #include "Thread.hpp"
+#include "Function.hpp"
 
 template<typename T>
 class Future {
     public:
-        template<typename Function>
-        Future(const Function& function);
+        Future(Function<T()>&& function);
 
         ~Future();
+
 
         // Wait forever if 0.
         bool wait(size_t milliseconds = 0) const;
@@ -17,7 +18,8 @@ class Future {
         T get() const;
 
     private:
-        Thread mThread;
+        SharedPtr<Thread> mThread;
+        SharedPtr<Function<T()>> mFunction;
         T mPromise;
         volatile bool mIsReady = false;
 };

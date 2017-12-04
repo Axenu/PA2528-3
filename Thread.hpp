@@ -4,11 +4,12 @@
 #include <cstring>
 
 #include "Function.hpp"
-
+#include "SharedPtr.hpp"
+#include <utility>
 
 class Thread {
     public:
-        Thread(const Function<void()>& function);
+        Thread(Function<void()>&& function);
         ~Thread();
 
         void run();
@@ -21,8 +22,8 @@ class Thread {
         void* createThread() const;
 
     private:
-        Function<void()> mFunction;
-        void* mThreadHandle = nullptr;
+        SharedPtr<Function<void()>> mFunction;
+        SharedPtr<void*> mThreadHandle;
 };
 
 #endif // __THREAD__
