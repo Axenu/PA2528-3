@@ -4,13 +4,36 @@
 
 ImporterManager::ImporterManager()
 {
-	m_loaderAssimp = new AssimpLoader();
+	
 }
 
 
 ImporterManager::~ImporterManager()
 {
-	delete m_loaderAssimp;
+	if(m_loaderAssimp)
+		delete m_loaderAssimp;
+}
+
+void ImporterManager::initLoader(int importer)
+{
+	switch (importer)
+	{
+	case loader_assimp:
+		m_loaderAssimp = new AssimpLoader();
+		break;
+
+	case loader_stb_image:
+		break;
+
+	default:
+		break;
+	}
+}
+
+void ImporterManager::destroyLoader(int importer)
+{
+	if (m_loaderAssimp)
+		delete m_loaderAssimp;
 }
 
 void ImporterManager::importMesh(int importer, std::string file)
