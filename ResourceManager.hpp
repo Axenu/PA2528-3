@@ -9,6 +9,7 @@
 #include "Mesh.hpp"
 #include "HashMap.hpp"
 #include "SpinLock.hpp"
+#include "Future.hpp"
 
 // Asynchronous operations are handled by the ResourceManager. Not the PackageReader.
 class ResourceManager {
@@ -20,24 +21,18 @@ class ResourceManager {
         static SharedPtr<Mesh> loadMesh(gui_t gui);
 
         // Asynchronous load methods.
-        template<typename T>
-        struct AsyncHandle {
-            // Return pointer of resource if ready, else nullptr. Will wait (block) for specified duration.
-            SharedPtr<T> wait(size_t milliseconds);
-        };
         // Something like this... Poll the handle to check availability.
-        static AsyncHandle<Texture> aloadTexture(gui_t gui);
-        static AsyncHandle<Mesh> aloadMesh(gui_t gui);
+        static Future<SharedPtr<Texture>> aloadTexture(gui_t gui);
+        static Future<SharedPtr<Mesh>> aloadMesh(gui_t gui);
 
-        template<typename T>
-        using Callback = void (*)(SharedPtr<T>);
         // Something like this... The callback is invoked when operation completes.
         // The SharedPtr parameter of the callback contains the loaded resource.
-        static aloadTexture(gui_t gui, Callback<Texture> callback);
-        static aloadMesh(gui_t gui, Callback<Mesh> callback);
+        static void aloadTexture(gui_t gui, Function<void(SharedPtr<Texture>)> callback);
+        static void aloadMesh(gui_t gui, Function<void(SharedPtr<Mesh>)> callback);
 
         static void garbageCollectTextures();
-
+        static void garbageCollectMeshes();
+        static void garbageCollect();
 
     private:
         template<typename T>
