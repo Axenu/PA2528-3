@@ -1,8 +1,8 @@
 #include <cassert>
 
 template<typename T>
-Future<T>::Future(Function<T()>&& function)
-: mFunction(new Function<T()>(std::move(function)))
+Future<T>::Future(const Function<T()>& function)
+: mFunction(new Function<T()>(function))
 , mThread(new Thread([this](){mPromise = mFunction->operator()(); mIsReady = true;})) {
     mThread->run();
 }

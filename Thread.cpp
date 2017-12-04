@@ -4,8 +4,8 @@
 #include <cassert>
 #include <utility>
 
-Thread::Thread(Function<void()>&& function)
-: mFunction(new Function<void()>(std::move(function)))
+Thread::Thread(const Function<void()>& function)
+: mFunction(new Function<void()>(function))
 , mThreadHandle((void**)new char[sizeof(void*)]()){
     *mThreadHandle = nullptr;
 }

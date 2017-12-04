@@ -7,7 +7,7 @@
 template<typename T>
 class Future {
     public:
-        Future(Function<T()>&& function);
+        Future(const Function<T()>& function);
 
         ~Future();
 

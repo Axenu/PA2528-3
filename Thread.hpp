@@ -9,7 +9,7 @@
 
 class Thread {
     public:
-        Thread(Function<void()>&& function);
+        Thread(const Function<void()>& function);
         ~Thread();
 
         void run();
