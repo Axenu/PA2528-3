@@ -22,6 +22,8 @@ class Lambda<Return(Params...)> {
         template<typename LambdaT>
         static Lambda<Return(Params...)>* make(const LambdaT& lambda);
         virtual Return operator()(Params... args) = 0;
+
+        virtual ~Lambda();
 };
 
 #include "Lambda.inl"

@@ -13,3 +13,8 @@ template<typename LambdaT>
 Lambda<Return(Params...)>* Lambda<Return(Params...)>::make(const LambdaT& lambda) {
     return new LambdaHelper<LambdaT, Return, Params...>(lambda);
 }
+
+template<typename Return, typename... Params>
+Lambda<Return(Params...)>::~Lambda() {
+
+}
