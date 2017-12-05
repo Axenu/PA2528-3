@@ -15,16 +15,16 @@ class Function<Return(Params...)> {
         template<typename LambdaT>
         Function(const LambdaT& lambda);
 
-        Return operator()(Params... args);
+        Return operator()(Params... args) const;
     private:
-        Return callLambda(Params... args);
-        Return callFunction(Params... args);
+        Return callLambda(Params... args) const;
+        Return callFunction(Params... args) const;
 
     private:
         SharedPtr<Lambda<Return(Params...)>> mLambda;
         Return (*mFunction)(Params...);
 
-        Return (Function::*mCaller)(Params...);
+        Return (Function::*mCaller)(Params...) const;
 };
 
 #include "Function.inl"

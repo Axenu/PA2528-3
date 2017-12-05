@@ -13,16 +13,16 @@ Function<Return(Params...)>::Function(const LambdaT& lambda)
 
 
 template<typename Return, typename... Params>
-Return Function<Return(Params...)>::operator()(Params... args) {
+Return Function<Return(Params...)>::operator()(Params... args) const {
     return (this->*mCaller)(args...);
 }
 
 template<typename Return, typename... Params>
-Return Function<Return(Params...)>::callLambda(Params... args) {
+Return Function<Return(Params...)>::callLambda(Params... args) const {
     return mLambda->operator()(args...);
 }
 
 template<typename Return, typename... Params>
-Return Function<Return(Params...)>::callFunction(Params... args) {
+Return Function<Return(Params...)>::callFunction(Params... args) const {
     return mFunction(args...);
 }
