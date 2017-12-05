@@ -1,5 +1,6 @@
 #include "ResourceManager.hpp"
 #include "PackageReader.hpp"
+#include "ThreadPool.hpp"
 
 HashMap<gui_t, ResourceManager::Entry<Texture>*> ResourceManager::mTextures;
 HashMap<gui_t, ResourceManager::Entry<Mesh>*> ResourceManager::mMeshes;
@@ -90,20 +91,21 @@ SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
     return mesh;
 }
 
-Future<SharedPtr<Texture>> ResourceManager::aloadTexture(gui_t gui) {
-    return Future<SharedPtr<Texture>>([gui](){return loadTexture(gui);});
+Promise<SharedPtr<Texture>> ResourceManager::aloadTexture(gui_t gui) {
+    return ThreadPool::promise<SharedPtr<Texture>>([gui](){return loadTexture(gui);});
 }
 
-Future<SharedPtr<Mesh>> ResourceManager::aloadMesh(gui_t gui) {
-    return Future<SharedPtr<Mesh>>([gui](){return loadMesh(gui);});
+Promise<SharedPtr<Mesh>> ResourceManager::aloadMesh(gui_t gui) {
+    return ThreadPool::promise<SharedPtr<Mesh>>([gui](){return loadMesh(gui);});
 }
 
 
 void ResourceManager::aloadTexture(gui_t gui, Function<void(SharedPtr<Texture>)> callback) {
+    ThreadPool::launch([gui, callback](){callback(loadTexture(gui));});
 }
 
 void ResourceManager::aloadMesh(gui_t gui, Function<void(SharedPtr<Mesh>)> callback) {
-
+    ThreadPool::launch([gui, callback](){callback(loadMesh(gui));});
 }
 
 

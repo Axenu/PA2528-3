@@ -9,7 +9,8 @@
 #include "Mesh.hpp"
 #include "HashMap.hpp"
 #include "SpinLock.hpp"
-#include "Future.hpp"
+#include "Promise.hpp"
+#include "Function.hpp"
 
 // Asynchronous operations are handled by the ResourceManager. Not the PackageReader.
 class ResourceManager {
@@ -22,8 +23,8 @@ class ResourceManager {
 
         // Asynchronous load methods.
         // Something like this... Poll the handle to check availability.
-        static Future<SharedPtr<Texture>> aloadTexture(gui_t gui);
-        static Future<SharedPtr<Mesh>> aloadMesh(gui_t gui);
+        static Promise<SharedPtr<Texture>> aloadTexture(gui_t gui);
+        static Promise<SharedPtr<Mesh>> aloadMesh(gui_t gui);
 
         // Something like this... The callback is invoked when operation completes.
         // The SharedPtr parameter of the callback contains the loaded resource.
