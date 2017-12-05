@@ -1,13 +1,13 @@
 template<typename Return, typename... Params>
 Function<Return(Params...)>::Function(Return (*function)(Params...))
-: mCaller(callFunction) {
+: mCaller(&Function<Return(Params...)>::callFunction) {
     mFunction = function;
 }
 
 template<typename Return, typename... Params>
 template<typename LambdaT>
 Function<Return(Params...)>::Function(const LambdaT& lambda)
-: mCaller(callLambda) {
+: mCaller(&Function<Return(Params...)>::callLambda) {
     mLambda = Lambda<Return(Params...)>::make(lambda);
 }
 
