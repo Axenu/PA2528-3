@@ -2,18 +2,22 @@
 #define __IMPORTERMANAGER__
 
 #include "AssimpLoader.h"
+#include "ImageLoader.h"
 
 class ImporterManager
 {
 private:
-	enum Importer {
-		assimp = 1,
-		placeholder = 2
+	enum Importers {
+		loader_assimp = 1,
+		loader_stb_image = 2
 	};
 
 public:
 	ImporterManager();
 	~ImporterManager();
+
+	void initLoader(int importer);
+	void destroyLoader(int importer);
 
 	void importMesh(int importer, std::string file);
 	void importModel(int importer, std::string file);
@@ -25,6 +29,7 @@ private:
 	// importUsing2ndLibrary ...
 
 	AssimpLoader* m_loaderAssimp;
+	ImageLoader* m_imgLoader;
 
 };
 
