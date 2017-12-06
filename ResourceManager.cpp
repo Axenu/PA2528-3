@@ -1,5 +1,6 @@
 #include "ResourceManager.hpp"
 #include "PackageReader.hpp"
+#include "ThreadPool.hpp"
 
 HashMap<gui_t, ResourceManager::Entry<Texture>*> ResourceManager::mTextures;
 HashMap<gui_t, ResourceManager::Entry<Mesh>*> ResourceManager::mMeshes;
@@ -57,7 +58,54 @@ SharedPtr<Texture> ResourceManager::loadTexture(gui_t gui) {
 }
 
 SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
-    return SharedPtr<Mesh>();
+    Entry<Mesh>** entryPtr = mMeshes.find(gui);
+    if(!entryPtr) {
+        // No such resource exists. Return default error mesh. TODO
+        return nullptr;
+    }
+    Entry<Mesh>& entry = **entryPtr;
+
+    entry.lock.lock();
+    SharedPtr<Mesh> mesh = entry.data;
+    entry.lock.unlock();
+
+    if(mesh != nullptr) {
+        return mesh;
+    }
+
+    mesh = PackageReader::loadMesh(gui);
+    if(mesh == nullptr) {
+        // No such resource exists. Return default error mesh. TODO
+        return nullptr;
+    }
+
+    entry.lock.lock();
+    if(entry.data == nullptr) {
+        entry.data = mesh;
+    }
+    else {
+        mesh = entry.data;
+    }
+    entry.lock.unlock();
+
+    return mesh;
+}
+
+Promise<SharedPtr<Texture>> ResourceManager::aloadTexture(gui_t gui) {
+    return ThreadPool::promise<SharedPtr<Texture>>([gui](){return loadTexture(gui);});
+}
+
+Promise<SharedPtr<Mesh>> ResourceManager::aloadMesh(gui_t gui) {
+    return ThreadPool::promise<SharedPtr<Mesh>>([gui](){return loadMesh(gui);});
+}
+
+
+void ResourceManager::aloadTexture(gui_t gui, Function<void(SharedPtr<Texture>)> callback) {
+    ThreadPool::launch([gui, callback](){callback(loadTexture(gui));});
+}
+
+void ResourceManager::aloadMesh(gui_t gui, Function<void(SharedPtr<Mesh>)> callback) {
+    ThreadPool::launch([gui, callback](){callback(loadMesh(gui));});
 }
 
 
@@ -69,4 +117,19 @@ void ResourceManager::garbageCollectTextures() {
         }
         entry->lock.unlock();
     }
+}
+
+void ResourceManager::garbageCollectMeshes() {
+    for(Entry<Mesh>* entry : mMeshes) {
+        entry->lock.lock();
+        if(entry->data.getReferenceCount() == 1) {
+            entry->data = nullptr;
+        }
+        entry->lock.unlock();
+    }
+}
+
+void ResourceManager::garbageCollect() {
+    garbageCollectTextures();
+    garbageCollectMeshes();
 }
