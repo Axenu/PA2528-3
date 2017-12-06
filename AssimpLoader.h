@@ -20,9 +20,13 @@ public:
 
 	bool importFromFile(const std::string& file);
 	bool importFromMemory(const void* buffer, size_t lenght);
-	bool loadMesh(const std::string& file);
-	bool loadModel(const std::string& file);
-	bool loadTexture(const std::string& file);
+
+	template <typename T>
+	T loadMesh(const std::string& file);
+	template <typename T>
+	T loadModel(const std::string& file);
+	template <typename T>
+	T loadTexture(const std::string& file);
 
 private:
 	void createLogger();
