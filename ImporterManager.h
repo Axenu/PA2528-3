@@ -29,8 +29,6 @@ private:
 	// importUsing2ndLibrary ...
 
 	AssimpLoader* m_loaderAssimp;
-	ImageLoader* m_imgLoader;
-
 };
 
 #endif

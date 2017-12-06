@@ -1,14 +1,15 @@
 #include <cassert>
 
 template<typename T>
-template<typename Function>
-Future<T>::Future(const Function& function)
-: mThread([this, function](){mPromise = function(); mIsReady = true;}) {
+Future<T>::Future(const Function<T()>& function)
+: mFunction(new Function<T()>(function))
+, mThread(new Thread([this](){mPromise = mFunction->operator()(); mIsReady = true;})) {
+    mThread->run();
 }
 
 template<typename T>
 Future<T>::~Future() {
-    mThread.join();
+    mThread->join();
 }
 
 template<typename T>
@@ -16,7 +17,7 @@ bool Future<T>::wait(size_t milliseconds) const {
     if(mIsReady) {
         return true;
     }
-    return mThread.wait(milliseconds);
+    return mThread->wait(milliseconds);
 }
 
 template<typename T>

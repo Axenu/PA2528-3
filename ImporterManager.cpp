@@ -51,11 +51,11 @@ void ImporterManager::importTexture(int importer, std::string file)
 
 }
 
-bool ImporterManager::importUsingAssimp(std::string file)
-{
-	bool result;
-
-	result = m_loaderAssimp->importFile(file);
-
-	return result;
-}
+//bool ImporterManager::importUsingAssimp(std::string file)
+//{
+//	bool result;
+//
+//	result = m_loaderAssimp->importFile(file);
+//
+//	return result;
+//}

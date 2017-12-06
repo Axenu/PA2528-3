@@ -9,29 +9,60 @@ AssimpLoader::AssimpLoader()
 
 AssimpLoader::~AssimpLoader()
 {
+	delete scene;
 }
 
-bool AssimpLoader::importFile(const std::string& file)
+bool AssimpLoader::importFromFile(const std::string& file)
 {
-	Assimp::Importer importer;
+	// make sure the file exists
+	std::ifstream fin(file.c_str());
+	if (!fin.fail())
+	{
+		fin.close();
+	}
+	else
+	{
+		std::cout << "Unable to open file: " << file << std::endl;
+		logInfo(importer.GetErrorString());
+		return false;
+	}
 
-	// read file and do post processing
-	// more requests = slower
-	const aiScene* scene = importer.ReadFile(file,
-		aiProcess_CalcTangentSpace		| // does nothing if the mesh have no normals
-		aiProcess_Triangulate			| // triangulate all faces of all meshes
-		aiProcess_JoinIdenticalVertices | // identifies and joins identical vertex data sets within all imported meshes
-		aiProcess_SortByPType);			  // split meshes with more than one primitive type into homogeneous sub-meshes
+	// read file and do post processing using one of the assimp presets
+	// aiProcessPreset_TargetRealtime_Quality
+	scene = importer.ReadFile(file, aiProcessPreset_TargetRealtime_Quality);
 
 	// check for errors
 	if (!scene)
 	{
-		errorLogging(importer.GetErrorString());
+		logInfo(importer.GetErrorString());
 		return false;
 	}
 
-	// access the file's contents
-	sceneProcessing( scene);
+	// access file content
+	logInfo("Imported scene " + file + " without errors.");
+
+	// done
+	return true;
+}
+
+bool AssimpLoader::importFromMemory(const void* buffer, size_t lenght)
+{
+	// buffer = pointer to file data, lenght = lenght of buffer in bytes
+
+	// read file from memory and do post processing using one of the assimp presets
+	// aiProcessPreset_TargetRealtime_Quality
+	scene = importer.ReadFileFromMemory(buffer, lenght, aiProcessPreset_TargetRealtime_Quality);
+
+	// check for errors
+	// check for errors
+	if (!scene)
+	{
+		logInfo(importer.GetErrorString());
+		return false;
+	}
+
+	// access file content
+	logInfo("Imported scene from memory without errors.");
 
 	// done
 	return true;
@@ -52,19 +83,29 @@ bool AssimpLoader::loadTexture(const std::string& file)
 	return true;
 }
 
-void AssimpLoader::errorLogging(const std::string& error)
+void AssimpLoader::createLogger()
 {
-	// create logger
-	Assimp::DefaultLogger::create("", Assimp::Logger::VERBOSE);
+	// use assimp:Logger::NORMAL if you do not want to analyze the import process
+	Assimp::Logger::LogSeverity severity = Assimp::Logger::VERBOSE;
 
-	// do error logging
-	Assimp::DefaultLogger::get()->info(error);
+	// create logger for console output
+	Assimp::DefaultLogger::create("", severity,aiDefaultLogStream_STDOUT);
 
-	// done
+	// create logger for text file output
+	Assimp::DefaultLogger::create("assimp_log.txt", severity, aiDefaultLogStream_FILE);
+
+	// logger is ready
+	Assimp::DefaultLogger::get()->info("this is my info-call");
+}
+
+void AssimpLoader::destroyLogger()
+{
 	Assimp::DefaultLogger::kill();
 }
 
-void AssimpLoader::sceneProcessing(const aiScene* scene)
+void AssimpLoader::renderScene(const aiScene* scene)
 {
+	logInfo("rendering objects");
 	
+	// render code
 }
