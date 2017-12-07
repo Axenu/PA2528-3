@@ -1,5 +1,5 @@
-#ifndef IMAGELOADER_H
-#define IMAGELOADER_H
+#ifndef __IMAGELOADER__
+#define __IMAGELOADER__
 
 #include <iostream>
 

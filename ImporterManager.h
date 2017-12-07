@@ -1,5 +1,5 @@
-#ifndef IMPORTERMANAGER_H
-#define IMPORTERMANAGER_H
+#ifndef __IMPORTERMANAGER__
+#define __IMPORTERMANAGER__
 
 #include "AssimpLoader.h"
 #include "ImageLoader.h"

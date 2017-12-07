@@ -1,5 +1,5 @@
-#ifndef ImporterTester_h
-#define ImporterTester_h
+#ifndef __ImporterTester__
+#define __ImporterTester__
 
 #include "ImporterManager.h"
 
