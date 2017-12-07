@@ -1,6 +1,8 @@
 #ifndef IMAGELOADER_H
 #define IMAGELOADER_H
 
+#include <iostream>
+
 class ImageLoader
 {
 public:

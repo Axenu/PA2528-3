@@ -4,7 +4,7 @@
 
 ImporterManager::ImporterManager()
 {
-	
+	m_loaderAssimp = NULL;
 }
 
 
@@ -88,10 +88,14 @@ T ImporterManager::importModel(int importer, std::string file)
 	
 }
 
-template <typename T>
-T ImporterManager::importTexture(int importer, std::string file)
+unsigned char* ImporterManager::importTexture(std::string file, int* width, int* height)
 {
+	return ImageLoader::loadFromFile(file.c_str(), width, height);
+}
 
+void ImporterManager::freeTexture(unsigned char* image)
+{
+	ImageLoader::freeImage(image);
 }
 
 //bool ImporterManager::importUsingAssimp(std::string file)

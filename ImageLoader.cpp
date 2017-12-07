@@ -10,7 +10,10 @@ unsigned char* ImageLoader::loadFromFile(const char* file, int* width, int* heig
 {
 	unsigned char* image = stbi_load(file, width, height, 0, 0);
 
-	// process data
+	// do additional data processing here
+
+	if (image == nullptr)
+		std::cout << "Stb_image failed to load texture from file:" << file << std::endl;
 
 	return image;
 }

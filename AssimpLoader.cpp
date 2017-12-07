@@ -9,7 +9,7 @@ AssimpLoader::AssimpLoader()
 
 AssimpLoader::~AssimpLoader()
 {
-	delete scene;
+
 }
 
 bool AssimpLoader::importFromFile(const std::string& file)

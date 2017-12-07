@@ -26,9 +26,11 @@ public:
 	T importMesh(int importer, std::string file);
 	template <typename T>
 	T  importModel(int importer, std::string file);
-	template <typename T>
-	T importTexture(int importer, std::string file);
+	
+	unsigned char* importTexture(std::string file, int* width, int* height);
 	// add filetype as parameter or return pointer
+	
+	void freeTexture(unsigned char* image);
 
 private:
 	//bool importUsingAssimp(std::string file);
