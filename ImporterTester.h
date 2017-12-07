@@ -24,12 +24,12 @@ public:
 	static void imageFileTest(std::string imagefile)
 	{
 		unsigned char* image;
-		int width, height;
+		int width = 0, height = 0;
 
 		ImporterManager* importer = new ImporterManager();
 
 		std::cout << "Loading " << imagefile << " using stb_image." << std::endl;
-		image = importer->importTexture(imagefile, &width, &height);
+		image = importer->importTexture(imagefile, width, height);
 
 		std::cout << "Unloading " << imagefile << " using stb_image." << std::endl;
 		importer->freeTexture(image);

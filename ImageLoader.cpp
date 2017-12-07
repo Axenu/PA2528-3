@@ -6,14 +6,17 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-unsigned char* ImageLoader::loadFromFile(const char* file, int* width, int* height)
+unsigned char* ImageLoader::loadFromFile(const char* file, int width, int height)
 {
-	unsigned char* image = stbi_load(file, width, height, 0, 0);
+	unsigned char* image = stbi_load(file, &width, &height, 0, 0);
 
 	// do additional data processing here
 
 	if (image == nullptr)
-		std::cout << "Stb_image failed to load texture from file:" << file << std::endl;
+		std::cout << "Stb_image failed to load texture from file: " << file << std::endl;
+	else
+		std::cout << "Stb_image loaded texture from file: " << file << " | width: " << width << " | height: " << height << std::endl;
+
 
 	return image;
 }
