@@ -29,7 +29,7 @@ public:
 		ImporterManager* importer = new ImporterManager();
 
 		std::cout << "Loading " << imagefile << " using stb_image." << std::endl;
-		image = importer->importTexture(imagefile, width, height);
+		image = importer->loadTextureFromFile(imagefile, width, height);
 
 		std::cout << "Unloading " << imagefile << " using stb_image." << std::endl;
 		importer->freeTexture(image);
@@ -39,9 +39,22 @@ public:
 		std::getchar();
 	}
 
-	static void imageMemoryTest()
+	static void imageMemoryTest(void* buffer, int length)
 	{
+		unsigned char* image;
+		int width = 0, height = 0;
 
+		ImporterManager* importer = new ImporterManager();
+
+		std::cout << "Loading image from memory using stb_image." << std::endl;
+		image = importer->loadTextureFromMemory(buffer, length, width, height);
+
+		std::cout << "Unloading image from memory using stb_image." << std::endl;
+		importer->freeTexture(image);
+
+		delete importer;
+
+		std::getchar();
 	}
 };
 

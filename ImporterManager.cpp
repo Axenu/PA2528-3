@@ -88,9 +88,14 @@ T ImporterManager::importModel(int importer, std::string file)
 	
 }
 
-unsigned char* ImporterManager::importTexture(std::string file, int width, int height)
+unsigned char* ImporterManager::loadTextureFromFile(std::string file, int width, int height)
 {
 	return ImageLoader::loadFromFile(file.c_str(), width, height);
+}
+
+unsigned char* ImporterManager::loadTextureFromMemory(void* buffer, int length, int width, int height)
+{
+	return ImageLoader::loadFromMemory(length, width, height);
 }
 
 void ImporterManager::freeTexture(unsigned char* image)

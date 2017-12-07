@@ -7,7 +7,7 @@
 class ImporterManager
 {
 public:
-	static enum Importers {
+	static enum Importers { // not neeeded?
 		loader_assimp = 0,
 		loader_stb_image = 1
 	};
@@ -22,13 +22,15 @@ public:
 	bool importFromFile(int importer, std::string file);
 	bool importFromMemory(int importer, const void* buffer, size_t lenght);
 
+	// assimp
 	template <typename T>
 	T importMesh(int importer, std::string file);
 	template <typename T>
 	T  importModel(int importer, std::string file);
 	
-	unsigned char* importTexture(std::string file, int width, int height);
-	// add filetype as parameter or return pointer
+	// stb_image
+	unsigned char* loadTextureFromFile(std::string file, int width, int height);
+	unsigned char* loadTextureFromMemory(void* buffer, int length, int width, int height);
 	
 	void freeTexture(unsigned char* image);
 

@@ -21,11 +21,11 @@ unsigned char* ImageLoader::loadFromFile(const char* file, int width, int height
 	return image;
 }
 
-unsigned char* ImageLoader::loadFromMemory(int length, int* width, int* height)
+unsigned char* ImageLoader::loadFromMemory(int length, int width, int height)
 {
 	const stbi_uc* buffer;
 
-	unsigned char* image = stbi_load_from_memory(buffer, length, width, height, 0, 0);
+	unsigned char* image = stbi_load_from_memory(buffer, length, &width, &height, 0, 0);
 
 	return image;
 }
