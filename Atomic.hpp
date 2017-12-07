@@ -7,8 +7,8 @@ class Atomic {
     public:
         Atomic(uint32_t value = 0);
 
-        Atomic& operator++(int);
-        Atomic& operator--(int);
+        Atomic& operator++();
+        Atomic& operator--();
 
         Atomic& operator=(uint32_t value);
         Atomic& operator=(const Atomic& other);

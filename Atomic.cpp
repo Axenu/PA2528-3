@@ -9,12 +9,12 @@ Atomic::Atomic(uint32_t value) {
     *mValue = value;
 }
 
-Atomic& Atomic::operator++(int) {
+Atomic& Atomic::operator++() {
     InterlockedIncrement(mValue);
     return *this;
 }
 
-Atomic& Atomic::operator--(int) {
+Atomic& Atomic::operator--() {
     InterlockedDecrement(mValue);
     return *this;
 }
