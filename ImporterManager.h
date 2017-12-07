@@ -7,7 +7,7 @@
 class ImporterManager
 {
 public:
-	static enum Importers { // not neeeded?
+	enum Importers { // not neeeded?
 		loader_assimp = 0,
 		loader_stb_image = 1
 	};
