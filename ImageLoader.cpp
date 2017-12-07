@@ -15,17 +15,24 @@ unsigned char* ImageLoader::loadFromFile(const char* file, int width, int height
 	if (image == nullptr)
 		std::cout << "Stb_image failed to load texture from file: " << file << std::endl;
 	else
-		std::cout << "Stb_image loaded texture from file: " << file << " | width: " << width << " | height: " << height << std::endl;
+		std::cout << "Stb_image successfully loaded texture from file: " << file << " | width: " << width << " | height: " << height << std::endl;
 
 
 	return image;
 }
 
-unsigned char* ImageLoader::loadFromMemory(int length, int width, int height)
+unsigned char* ImageLoader::loadFromMemory(void* buffer, int length, int width, int height)
 {
-	const stbi_uc* buffer;
+	const stbi_uc* temp;
 
-	unsigned char* image = stbi_load_from_memory(buffer, length, &width, &height, 0, 0);
+	temp = static_cast<stbi_uc*>(buffer); // not tested yet (wip)
+
+	unsigned char* image = stbi_load_from_memory(temp, length, &width, &height, 0, 0);
+
+	if (image == nullptr)
+		std::cout << "Stb_image failed to load texture from memory" << std::endl;
+	else
+		std::cout << "Stb_image successfully loaded texture from memory | width: " << width << " | height: " << height << std::endl;
 
 	return image;
 }

@@ -95,7 +95,7 @@ unsigned char* ImporterManager::loadTextureFromFile(std::string file, int width,
 
 unsigned char* ImporterManager::loadTextureFromMemory(void* buffer, int length, int width, int height)
 {
-	return ImageLoader::loadFromMemory(length, width, height);
+	return ImageLoader::loadFromMemory(buffer, length, width, height);
 }
 
 void ImporterManager::freeTexture(unsigned char* image)
