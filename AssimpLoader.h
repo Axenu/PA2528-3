@@ -1,5 +1,5 @@
-#ifndef __ASSIMPLOADER__
-#define __ASSIMPLOADER__
+#ifndef ASSIMPLOADER_H
+#define ASSIMPLOADER_H
 
 #include <iostream>
 #include <fstream>

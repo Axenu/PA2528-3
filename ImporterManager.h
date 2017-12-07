@@ -1,15 +1,15 @@
-#ifndef __IMPORTERMANAGER__
-#define __IMPORTERMANAGER__
+#ifndef IMPORTERMANAGER_H
+#define IMPORTERMANAGER_H
 
 #include "AssimpLoader.h"
 #include "ImageLoader.h"
 
 class ImporterManager
 {
-private:
-	enum Importers {
-		loader_assimp = 1,
-		loader_stb_image = 2
+public:
+	static enum Importers {
+		loader_assimp = 0,
+		loader_stb_image = 1
 	};
 
 public:
@@ -31,7 +31,7 @@ public:
 	// add filetype as parameter or return pointer
 
 private:
-	bool importUsingAssimp(std::string file);
+	//bool importUsingAssimp(std::string file);
 	// importUsing2ndLibrary ...
 
 	AssimpLoader* m_loaderAssimp;
