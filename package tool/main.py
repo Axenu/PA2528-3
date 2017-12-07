@@ -42,7 +42,7 @@ def main(argv):
             if os.path.isfile(p):
                 size = os.path.getsize(p)
                 asset_type = getFileType(f)
-                output_file.write(f + ':' + hashlib.md5(f).hexdigest()[0:20] + ':' + asset_type[0] + ':' + asset_type[1] + ':' + str(size) + ':' + str(offset) + '\n')
+                output_file.write(f + ':' + str(abs(hash(f))) + ':' + asset_type[0] + ':' + asset_type[1] + ':' + str(size) + ':' + str(offset) + '\n')
                 offset += size
 
         for f in arr:
