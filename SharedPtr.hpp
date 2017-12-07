@@ -1,7 +1,7 @@
 #ifndef __SHARED_PTR__
 #define __SHARED_PTR__
 
-#include <atomic>
+#include "Atomic.hpp"
 #include <cstring>
 
 template<typename T>
@@ -33,7 +33,7 @@ class SharedPtr {
 
     private:
         T* mPtr = nullptr;
-        std::atomic<size_t>* mReferenceCount;
+        Atomic* mReferenceCount;
 };
 
 #include "SharedPtr.inl"

@@ -4,12 +4,13 @@ SpinLock::SpinLock() : mIsLocked(false) {
 }
 
 void SpinLock::lock() {
-    while(true) {
-        bool expected = false;
-        if(mIsLocked.compare_exchange_weak(expected, true)) {
-            return;
-        }
-    }
+    while(!mIsLocked.compareExchange(true, false));
+//    while(true) {
+//        bool expected = false;
+//        if(mIsLocked.compare_exchange_weak(expected, true)) {
+//            return;
+//        }
+//    }
 }
 
 void SpinLock::unlock() {
