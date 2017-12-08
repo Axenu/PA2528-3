@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-using gui_t = uint32_t;
+using gui_t = uint64_t;
 
 
 #endif // __GUI_T__

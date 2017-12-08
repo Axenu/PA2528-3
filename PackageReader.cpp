@@ -34,32 +34,30 @@ bool PackageReader::setPackage(const char* path) {
 		// Read filename
 		file.getline(temp, maxStringLength, ':');
 
-		// Find extension
-		const char* dot = strrchr(temp, '.');
-		
-		// If there is no extension, the package file is invalid.
-		if (!dot) {
-			closeFile();
-			delete[] temp;
-			return false;
-		}
-
-		// Set appropriate resource type.
-		if (strcmp(dot, ".obj") == 0) {
-			metaData.data[i].type = PackageReader::MetaData::Type::MESH;
-		}
-		else if (strcmp(dot, ".png") == 0) {
-			metaData.data[i].type = PackageReader::MetaData::Type::TEXTURE;
-		}
-		// TODO: add more file types?
-
-		// Read gui
+		// Read GUI
 		file.getline(temp, maxStringLength, ':');
 
 		// Convert to bit representation and store in metadata array
-		// TODO: fix me pls
-		metaData.data[i].gui = strtoll(temp, NULL, 16);
+		metaData.data[i].gui = strtoll(temp, NULL, 10);
 
+		// Read file type
+		file.getline(temp, maxStringLength, ':');
+		// Currently unused
+
+		// Read resource type
+		file.getline(temp, maxStringLength, ':');
+
+		// Set appropriate resource type.
+		if (strcmp(temp, "M") == 0) {
+			metaData.data[i].type = PackageReader::MetaData::Type::MESH;
+		}
+		else if (strcmp(temp, "T") == 0) {
+			metaData.data[i].type = PackageReader::MetaData::Type::TEXTURE;
+		}
+		else {
+			metaData.data[i].type = PackageReader::MetaData::Type::INVALID;
+		}
+		
 		// Read size
 		file.getline(temp, maxStringLength, ':');
 		metaData.data[i].size = strtol(temp, NULL, 10);
@@ -147,6 +145,10 @@ void* PackageReader::loadFile(gui_t gui)
 {
 	for (size_t i = 0; i < numResourcesInPackage; ++i) {
 		if (metaData.data[i].gui == gui) {
+			if (metaData.data[i].type == PackageReader::MetaData::Type::INVALID) {
+				return nullptr;
+			}
+
 			openFile();
 
 			file.seekg(metaData.data[i].offset + baseOffset);
