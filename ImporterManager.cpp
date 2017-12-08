@@ -4,7 +4,8 @@
 
 ImporterManager::ImporterManager()
 {
-	m_loaderAssimp = NULL;
+	m_loaderAssimp = new AssimpLoader();
+	//m_loaderAssimp = NULL;
 }
 
 
@@ -77,15 +78,27 @@ bool ImporterManager::importFromMemory(int importer, const void* buffer, size_t 
 }
 
 template <typename T>
-T ImporterManager::importMesh(int importer, std::string file)
+T ImporterManager::loadMeshFromFile(std::string file)
 {
-
+	return T;
 }
 
 template <typename T>
-T ImporterManager::importModel(int importer, std::string file)
+T ImporterManager::loadMeshFromMemory(const void* buffer, size_t lenght)
 {
 	
+}
+
+template <typename T>
+T ImporterManager::loadModelFromFile(std::string file)
+{
+	
+}
+
+template <typename T>
+T ImporterManager::loadModelFromMemory(const void* buffer, size_t lenght)
+{
+
 }
 
 unsigned char* ImporterManager::loadTextureFromFile(std::string file, int width, int height)

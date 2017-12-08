@@ -23,18 +23,18 @@ bool AssimpLoader::importFromFile(const std::string& file)
 	else
 	{
 		std::cout << "Unable to open file: " << file << std::endl;
-		logInfo(importer.GetErrorString());
+		logInfo(m_importer.GetErrorString());
 		return false;
 	}
 
 	// read file and do post processing using one of the assimp presets
 	// aiProcessPreset_TargetRealtime_Quality
-	scene = importer.ReadFile(file, aiProcessPreset_TargetRealtime_Quality);
+	m_scene = m_importer.ReadFile(file, aiProcessPreset_TargetRealtime_Quality);
 
 	// check for errors
-	if (!scene)
+	if (!m_scene)
 	{
-		logInfo(importer.GetErrorString());
+		logInfo(m_importer.GetErrorString());
 		return false;
 	}
 
@@ -51,13 +51,12 @@ bool AssimpLoader::importFromMemory(const void* buffer, size_t lenght)
 
 	// read file from memory and do post processing using one of the assimp presets
 	// aiProcessPreset_TargetRealtime_Quality
-	scene = importer.ReadFileFromMemory(buffer, lenght, aiProcessPreset_TargetRealtime_Quality);
+	m_scene = m_importer.ReadFileFromMemory(buffer, lenght, aiProcessPreset_TargetRealtime_Quality);
 
 	// check for errors
-	// check for errors
-	if (!scene)
+	if (!m_scene)
 	{
-		logInfo(importer.GetErrorString());
+		logInfo(m_importer.GetErrorString());
 		return false;
 	}
 
@@ -69,8 +68,16 @@ bool AssimpLoader::importFromMemory(const void* buffer, size_t lenght)
 }
 
 template <typename T>
-T AssimpLoader::loadMesh(const std::string& file)
+T AssimpLoader::loadMeshFromFile(const std::string& file)
 {
+
+	return true;
+}
+
+template <typename T>
+T AssimpLoader::loadMeshFromMemory(const std::string& file)
+{
+
 	return true;
 }
 

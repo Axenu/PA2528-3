@@ -4,6 +4,9 @@
 #include "AssimpLoader.h"
 #include "ImageLoader.h"
 
+// Keeps track of the different importers
+// InitLoader(ImporterManager::Importers::loader_assimp) before loading meshes and models
+// Stb_iamge does not need to be initialized or destroyed before use (loadTexture)
 class ImporterManager
 {
 public:
@@ -24,9 +27,14 @@ public:
 
 	// assimp
 	template <typename T>
-	T importMesh(int importer, std::string file);
+	T loadMeshFromFile(std::string file);
 	template <typename T>
-	T  importModel(int importer, std::string file);
+	T loadMeshFromMemory(const void* buffer, size_t lenght);
+
+	template <typename T>
+	T  loadModelFromFile(std::string file);
+	template <typename T>
+	T  loadModelFromMemory(const void* buffer, size_t lenght);
 	
 	// stb_image
 	unsigned char* loadTextureFromFile(std::string file, int width, int height);

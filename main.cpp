@@ -15,7 +15,11 @@
 
 int main()
 {
+	// simple importer tests
 	ImporterTester::imageFileTest("test_files/map_01.png");
+
+	ImporterTester::modelFileTest("package tool/example/Cow.obj");
+	// importer tests end
 
 	PackageReader::setPackage("..\\..\\PA2528-3\\package tool\\res");
 

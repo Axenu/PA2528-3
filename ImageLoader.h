@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include "Texture.hpp"
+
 class ImageLoader
 {
 public:

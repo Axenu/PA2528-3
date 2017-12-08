@@ -11,6 +11,9 @@
 #include "assimp\postprocess.h"	// post processing flags
 #include "assimp\LogStream.hpp"
 
+#include "Mesh.hpp"
+#include "Texture.hpp"
+
 class AssimpLoader
 {
 
@@ -22,7 +25,9 @@ public:
 	bool importFromMemory(const void* buffer, size_t lenght);
 
 	template <typename T>
-	T loadMesh(const std::string& file);
+	T loadMeshFromFile(const std::string& file);
+	template <typename T>
+	T loadMeshFromMemory(const std::string& file);
 	template <typename T>
 	T loadModel(const std::string& file);
 	template <typename T>
@@ -38,8 +43,8 @@ private:
 
 	void renderScene(const aiScene* scene); // draw the scene
 
-	Assimp::Importer importer;
-	const aiScene* scene;
+	Assimp::Importer m_importer;
+	const aiScene* m_scene;
 };
 
 #endif

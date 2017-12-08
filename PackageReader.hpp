@@ -6,6 +6,8 @@
 #include "Array.hpp"
 #include "gui_t.hpp"
 
+#include "ImporterManager.h"
+
 class Texture;
 class Mesh;
 

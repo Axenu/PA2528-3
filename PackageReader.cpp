@@ -91,9 +91,26 @@ Texture* PackageReader::loadTexture(gui_t gui) {
 	if (!mem)
 		return nullptr;
 
-	// Read memory into new texture
+	// Read memory into new texture (stb_image)
+	Texture* texture = 0;
+	unsigned char* placeholderTexture;
+	int width = 0, height = 0, lenght = 0; // width and lenght unnecessary?
+										  
+	ImporterManager* importer = new ImporterManager();
+	placeholderTexture = importer->loadTextureFromMemory(mem, metaData.data[gui].size, width, height);
+
+	delete importer;
 
 	free(mem);
+
+	/*if (texture)
+		return texture;*/
+
+	if (placeholderTexture)
+	{
+		texture = new Texture;
+		return texture;
+	}
 
 	return nullptr;	// return texture
 }
@@ -105,7 +122,15 @@ Mesh* PackageReader::loadMesh(gui_t gui) {
 	if (!mem)
 		return nullptr;
 
-	// Read memory into new mesh
+	// Read memory into new mesh (assimp)
+	Mesh* mesh;
+	ImporterManager* importer = new ImporterManager();
+
+	//importer->loadMeshFromMemory(mem, metaData.data[gui].size);
+
+	free(mem);
+
+	delete importer;
 
 	free(mem);
 
