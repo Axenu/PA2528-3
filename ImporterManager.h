@@ -6,10 +6,10 @@
 
 class ImporterManager
 {
-private:
-	enum Importers {
-		loader_assimp = 1,
-		loader_stb_image = 2
+public:
+	enum Importers { // not neeeded?
+		loader_assimp = 0,
+		loader_stb_image = 1
 	};
 
 public:
@@ -19,13 +19,23 @@ public:
 	void initLoader(int importer);
 	void destroyLoader(int importer);
 
-	void importMesh(int importer, std::string file);
-	void importModel(int importer, std::string file);
-	void importTexture(int importer, std::string file);
-	// add filetype as parameter or return pointer
+	bool importFromFile(int importer, std::string file);
+	bool importFromMemory(int importer, const void* buffer, size_t lenght);
+
+	// assimp
+	template <typename T>
+	T importMesh(int importer, std::string file);
+	template <typename T>
+	T  importModel(int importer, std::string file);
+	
+	// stb_image
+	unsigned char* loadTextureFromFile(std::string file, int width, int height);
+	unsigned char* loadTextureFromMemory(void* buffer, int length, int width, int height);
+	
+	void freeTexture(unsigned char* image);
 
 private:
-	bool importUsingAssimp(std::string file);
+	//bool importUsingAssimp(std::string file);
 	// importUsing2ndLibrary ...
 
 	AssimpLoader* m_loaderAssimp;

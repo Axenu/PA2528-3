@@ -9,7 +9,7 @@ AssimpLoader::AssimpLoader()
 
 AssimpLoader::~AssimpLoader()
 {
-	delete scene;
+
 }
 
 bool AssimpLoader::importFromFile(const std::string& file)
@@ -68,17 +68,20 @@ bool AssimpLoader::importFromMemory(const void* buffer, size_t lenght)
 	return true;
 }
 
-bool AssimpLoader::loadMesh(const std::string& file)
+template <typename T>
+T AssimpLoader::loadMesh(const std::string& file)
 {
 	return true;
 }
 
-bool AssimpLoader::loadModel(const std::string& file)
+template <typename T>
+T AssimpLoader::loadModel(const std::string& file)
 {
 	return true;
 }
 
-bool AssimpLoader::loadTexture(const std::string& file)
+template <typename T>
+T AssimpLoader::loadTexture(const std::string& file)
 {
 	return true;
 }
