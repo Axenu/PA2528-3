@@ -5,26 +5,29 @@
 
 class Atomic {
     public:
-        Atomic(uint32_t value = 0);
+        Atomic(long int value = 0);
 
         Atomic& operator++();
         Atomic& operator--();
 
-        Atomic& operator=(uint32_t value);
+        Atomic& operator+=(int i);
+        Atomic& operator-=(int i);
+
+        Atomic& operator=(long int value);
         Atomic& operator=(const Atomic& other);
 
-        bool operator==(uint32_t value);
+        bool operator==(long int value);
         bool operator==(const Atomic& other);
 
-        uint32_t exchange(uint32_t value);
-        bool compareExchange(uint32_t exchange, uint32_t expected);
+        long int exchange(long int value);
+        bool compareExchange(long int exchange, long int expected);
 
-        uint32_t load();
+        long int load();
 
 
     private:
-        char mData[8];
-        volatile uint32_t* mValue;
+        char mData[16];
+        volatile long int* mValue;
 };
 
 #endif // __ATOMIC__
