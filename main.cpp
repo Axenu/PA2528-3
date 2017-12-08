@@ -16,6 +16,7 @@ int main()
 	ImporterTester::imageFileTest("test_files/map_01.png");
 
 	PackageReader::setPackage("..\\..\\PA2528-3\\package tool\\res");
+	PackageReader::clearPackage();
 
     return 0;
 }
