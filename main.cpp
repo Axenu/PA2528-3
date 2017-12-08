@@ -10,7 +10,7 @@
 
 #include "PackageReader.hpp"
 #include "ResourceManager.hpp"
-
+#include "ThreadPool.hpp"
 
 
 int main()
@@ -23,6 +23,7 @@ int main()
 
 	PackageReader::setPackage("..\\..\\PA2528-3\\package tool\\res");
 
+	ThreadPool::initialize();
 	ResourceManager::initialize();
 
 	std::cout << "Loading level..." << std::endl;
