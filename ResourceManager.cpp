@@ -6,6 +6,12 @@ HashMap<gui_t, ResourceManager::Entry<Texture>*> ResourceManager::mTextures;
 HashMap<gui_t, ResourceManager::Entry<Mesh>*> ResourceManager::mMeshes;
 
 void ResourceManager::initialize() {
+    static bool isInitialized = false;
+    if(isInitialized) {
+        return;
+    }
+    isInitialized = true;
+
     Array<PackageReader::MetaData> metaData = PackageReader::getMetaData();
     metaData.data = new PackageReader::MetaData();
     metaData.data->type = PackageReader::MetaData::Type::TEXTURE;
