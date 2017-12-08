@@ -80,19 +80,19 @@ bool ImporterManager::importFromMemory(int importer, const void* buffer, size_t 
 template <typename T>
 T ImporterManager::loadMeshFromFile(std::string file)
 {
-	return T;
+	return T();
 }
 
 template <typename T>
 T ImporterManager::loadMeshFromMemory(const void* buffer, size_t lenght)
 {
-	
+
 }
 
 template <typename T>
 T ImporterManager::loadModelFromFile(std::string file)
 {
-	
+
 }
 
 template <typename T>
