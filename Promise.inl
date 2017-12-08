@@ -9,13 +9,23 @@ Promise<T>::Promise(SharedPtr<SharedPtr<T>> promise, SharedPtr<bool> isReady, Se
 
 template<typename T>
 bool Promise<T>::wait(size_t milliseconds) const {
-    return mSemaphore.wait(milliseconds);
+    if(!*mIsReady) {
+        bool ret = mSemaphore.wait(milliseconds);
+        if(ret) {
+            assert(*mIsReady);
+        }
+        return ret;
+    }
+    return true;
 }
 
 
 template<typename T>
 void Promise<T>::wait() const {
-    mSemaphore.wait();
+    if(!*mIsReady) {
+        mSemaphore.wait();
+        assert(*mIsReady);
+    }
 }
 
 
@@ -27,8 +37,7 @@ bool Promise<T>::isReady() const {
 
 template<typename T>
 T Promise<T>::get() const {
-    mSemaphore.wait();
-    assert(*mIsReady);
+    wait();
     return **mPromise;
 }
 
