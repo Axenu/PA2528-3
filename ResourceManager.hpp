@@ -11,6 +11,7 @@
 #include "SpinLock.hpp"
 #include "Promise.hpp"
 #include "Function.hpp"
+#include "Atomic.hpp"
 
 // Asynchronous operations are handled by the ResourceManager. Not the PackageReader.
 class ResourceManager {
@@ -35,14 +36,23 @@ class ResourceManager {
         static void garbageCollectMeshes();
         static void garbageCollect();
 
+        static void setMemoryLimit(size_t limit);
+
+    private:
+        static bool fitLimit(size_t loadSize);
+
     private:
         template<typename T>
         struct Entry {
+            Entry(size_t s) : size(s) {}
             SpinLock lock;
             SharedPtr<T> data;
+            size_t size;
         };
         static HashMap<gui_t, Entry<Texture>*> mTextures;
         static HashMap<gui_t, Entry<Mesh>*> mMeshes;
+        static Atomic mSize;
+        static size_t mSizeLimit;
 
 };
 

@@ -4,6 +4,8 @@
 
 HashMap<gui_t, ResourceManager::Entry<Texture>*> ResourceManager::mTextures;
 HashMap<gui_t, ResourceManager::Entry<Mesh>*> ResourceManager::mMeshes;
+Atomic ResourceManager::mSize = 0;
+size_t ResourceManager::mSizeLimit = -1;
 
 void ResourceManager::initialize() {
     static bool isInitialized = false;
@@ -13,16 +15,12 @@ void ResourceManager::initialize() {
     isInitialized = true;
 
     Array<PackageReader::MetaData> metaData = PackageReader::getMetaData();
-    metaData.data = new PackageReader::MetaData();
-    metaData.data->type = PackageReader::MetaData::Type::TEXTURE;
-    metaData.data->gui = 0;
-    metaData.size = 1;
     for(size_t i = 0; i < metaData.size; i++) {
         const PackageReader::MetaData& d = metaData.data[i];
         using T = PackageReader::MetaData::Type;
         switch(d.type) {
-            case T::TEXTURE:    mTextures.insert(d.gui, new Entry<Texture>()); break;
-            case T::MESH:       mMeshes.insert(d.gui, new Entry<Mesh>()); break;
+            case T::TEXTURE:    mTextures.insert(d.gui, new Entry<Texture>(d.size)); break;
+            case T::MESH:       mMeshes.insert(d.gui, new Entry<Mesh>(d.size)); break;
             default:            break;
         }
     }
@@ -45,6 +43,12 @@ SharedPtr<Texture> ResourceManager::loadTexture(gui_t gui) {
         return texture;
     }
 
+    if(!fitLimit(entry.size)) {
+        std::cerr << "Failed to load resource (" << gui << "). Memory limit exceeded." << std::endl;
+        // Loading this resource will violate the memory limit. Return default texture. TODO
+        return nullptr;
+    }
+
     texture = PackageReader::loadTexture(gui);
     if(texture == nullptr) {
         // No such resource exists. Return default error texture. TODO
@@ -54,6 +58,7 @@ SharedPtr<Texture> ResourceManager::loadTexture(gui_t gui) {
     entry.lock.lock();
     if(entry.data == nullptr) {
         entry.data = texture;
+        mSize += entry.size;
     }
     else {
         texture = entry.data;
@@ -79,6 +84,12 @@ SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
         return mesh;
     }
 
+    if(!fitLimit(entry.size)) {
+        std::cerr << "Failed to load resource (" << gui << "). Memory limit exceeded." << std::endl;
+        // Loading this resource will violate the memory limit. Return default texture. TODO
+        return nullptr;
+    }
+
     mesh = PackageReader::loadMesh(gui);
     if(mesh == nullptr) {
         // No such resource exists. Return default error mesh. TODO
@@ -88,6 +99,7 @@ SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
     entry.lock.lock();
     if(entry.data == nullptr) {
         entry.data = mesh;
+        mSize += entry.size;
     }
     else {
         mesh = entry.data;
@@ -120,6 +132,7 @@ void ResourceManager::garbageCollectTextures() {
         entry->lock.lock();
         if(entry->data.getReferenceCount() == 1) {
             entry->data = nullptr;
+            mSize -= entry->size;
         }
         entry->lock.unlock();
     }
@@ -130,6 +143,7 @@ void ResourceManager::garbageCollectMeshes() {
         entry->lock.lock();
         if(entry->data.getReferenceCount() == 1) {
             entry->data = nullptr;
+            mSize -= entry->size;
         }
         entry->lock.unlock();
     }
@@ -138,4 +152,17 @@ void ResourceManager::garbageCollectMeshes() {
 void ResourceManager::garbageCollect() {
     garbageCollectTextures();
     garbageCollectMeshes();
+}
+
+void ResourceManager::setMemoryLimit(size_t limit) {
+    mSizeLimit = limit;
+}
+
+bool ResourceManager::fitLimit(size_t loadSize) {
+    if((mSize.load() + loadSize) <= mSizeLimit) {
+        return true;
+    }
+
+    garbageCollect();
+    return (mSize.load() + loadSize) <= mSizeLimit;
 }
