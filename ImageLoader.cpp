@@ -9,7 +9,7 @@
 Texture* ImageLoader::loadFromFile(const char* file)
 {
 	Texture* texture = new Texture();
-	int comp = 0, req_comp = 0;
+	int comp = 0;
 
 	// load the texture image from image file
 	unsigned char* image = stbi_load(file, &texture->width, &texture->height, &comp, STBI_rgb_alpha);
@@ -36,7 +36,7 @@ Texture* ImageLoader::loadFromMemory(void* buffer, int length)
 	temp = static_cast<stbi_uc*>(buffer); // not tested yet (wip)
 
 	// load the texture image from memory
-	unsigned char* image = stbi_load_from_memory(temp, length, &texture->width, &texture->height, 0, STBI_rgb_alpha);
+	unsigned char* image = stbi_load_from_memory(temp, length, &texture->width, &texture->height, &texture->composition, STBI_rgb_alpha);
 
 	// do additional data processing here
 
