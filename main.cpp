@@ -15,6 +15,10 @@
 
 void ImporterTests()
 {
+	// Importer init test
+	ImporterTester::importerTest();
+	std::getchar();
+
 	// PNG
 	ImporterTester::imageFileTest("test_files/test.png");
 	std::getchar();
@@ -27,7 +31,7 @@ void ImporterTests()
 	ImporterTester::modelFileTest("package tool/example/Cow.obj");
 	std::getchar();
 
-	// 2nd model format
+	// PLY
 
 	// load mesh using assimp
 	Mesh* mesh = ImporterTester::meshFileTest("package tool/example/Cow.obj");

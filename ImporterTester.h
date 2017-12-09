@@ -9,7 +9,7 @@
 class ImporterTester
 {
 public:
-	static void assimpTest()
+	static void importerTest()
 	{
 		ImporterManager* importer = new ImporterManager();
 

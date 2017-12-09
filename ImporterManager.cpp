@@ -4,15 +4,13 @@
 
 ImporterManager::ImporterManager()
 {
-	m_loaderAssimp = new AssimpLoader();
-	//m_loaderAssimp = NULL;
+	
 }
 
 
 ImporterManager::~ImporterManager()
 {
-	if(m_loaderAssimp)
-		delete m_loaderAssimp;
+	
 }
 
 void ImporterManager::initLoader(int importer)
