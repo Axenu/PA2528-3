@@ -24,7 +24,7 @@ public:
 	bool importFromFile(const std::string& file);
 	bool importFromMemory(const void* buffer, size_t lenght);
 
-	Mesh* loadMeshFromFile(const std::string& file);
+	Mesh* loadMeshFromFile(const std::string& objFile);
 	Mesh* loadMeshFromMemory(const void* buffer, size_t lenght);
 	template <typename T>
 	T loadModel(const std::string& file);

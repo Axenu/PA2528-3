@@ -67,9 +67,26 @@ bool AssimpLoader::importFromMemory(const void* buffer, size_t lenght)
 	return true;
 }
 
-Mesh* AssimpLoader::loadMeshFromFile(const std::string& file)
+Mesh* AssimpLoader::loadMeshFromFile(const std::string& objFile)
 {
-	Mesh* mesh;
+	Mesh* mesh = new Mesh();
+
+	m_scene = m_importer.ReadFile(objFile, aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
+
+	// check for errors
+	if (!m_scene)
+	{
+		logInfo(m_importer.GetErrorString());
+		return false;
+	}
+
+	// access file content
+	logInfo("Imported scene " + objFile + " without errors.");
+
+	// code for extracting the mesh from scene into the mesh class here
+	aiMesh *temp = m_scene->mMeshes[0];
+	
+	mesh->aiMesh = temp;
 
 	return mesh;
 }
@@ -84,7 +101,7 @@ Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t lenght)
 }
 
 template <typename T>
-T AssimpLoader::loadModel(const std::string& file)
+T AssimpLoader::loadModel(const std::string& objFile)
 {
 	return true;
 }

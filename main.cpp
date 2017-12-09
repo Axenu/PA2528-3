@@ -16,16 +16,22 @@
 void ImporterTests()
 {
 	// PNG
-	ImporterTester::imageFileTest("test_files/map_01.png");
-
+	ImporterTester::imageFileTest("test_files/test.png");
+	std::getchar();
+	
 	// TGA
 	ImporterTester::imageFileTest("test_files/test.tga");
+	std::getchar();
 
 	// OBJ
 	ImporterTester::modelFileTest("package tool/example/Cow.obj");
+	std::getchar();
 
 	// 2nd model format
 
+	// load mesh using assimp
+	Mesh* mesh = ImporterTester::meshFileTest("package tool/example/Cow.obj");
+	std::getchar();
 }
 
 int main()

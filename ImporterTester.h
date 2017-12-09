@@ -20,8 +20,6 @@ public:
 		importer->destroyLoader(ImporterManager::Importers::loader_assimp);
 
 		delete importer;
-
-		std::getchar();
 	}
 
 	static void imageFileTest(std::string imagefile)
@@ -37,8 +35,6 @@ public:
 		importer->freeTexture(texture);
 
 		delete importer;
-
-		std::getchar();
 	}
 
 	static void imageMemoryTest(void* buffer, int length)
@@ -54,8 +50,6 @@ public:
 		importer->freeTexture(texture);
 
 		delete importer;
-
-		std::getchar();
 	}
 
 	static void modelFileTest(std::string modelfile)
@@ -75,8 +69,26 @@ public:
 		}
 
 		delete loader;
+	}
 
-		std::getchar();
+	static Mesh* meshFileTest(std::string modelfile)
+	{
+		std::cout << "Assimp Loading mesh from: " << modelfile << std::endl;
+		AssimpLoader* loader = new AssimpLoader();
+		Mesh* mesh = loader->loadMeshFromFile(modelfile);
+
+		if (mesh)
+		{
+			std::cout << "Successfully Loaded mesh: " << modelfile << std::endl;
+		}
+		else
+		{
+			std::cout << "Failed to load mesh: " << modelfile << std::endl;
+		}
+
+		delete loader;
+
+		return mesh;
 	}
 };
 
