@@ -91,7 +91,7 @@ Texture* PackageReader::loadTexture(gui_t gui) {
 	if (!mem)
 		return nullptr;
 
-	// Read memory into new texture (stb_image)
+	// Read memory data into new texture (stb_image)
 	ImporterManager* importer = new ImporterManager();
 	Texture* texture = new Texture();	
 	
@@ -111,19 +111,17 @@ Mesh* PackageReader::loadMesh(gui_t gui) {
 	if (!mem)
 		return nullptr;
 
-	// Read memory into new mesh (assimp)
-	Mesh* mesh;
+	// Read memory data into new mesh (assimp)
+	Mesh* mesh = new Mesh();
 	ImporterManager* importer = new ImporterManager();
 
-	//importer->loadMeshFromMemory(mem, metaData.data[gui].size);
-
-	free(mem);
+	mesh = importer->loadMeshFromMemory(mem, metaData.data[gui].size);
 
 	delete importer;
 
 	free(mem);
 
-	return nullptr;	// return mesh
+	return mesh;	// return mesh
 }
 
 // Return array of all GUIs in the package. Caller is responsible for the memory of returned array.

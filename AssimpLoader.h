@@ -24,14 +24,10 @@ public:
 	bool importFromFile(const std::string& file);
 	bool importFromMemory(const void* buffer, size_t lenght);
 
-	template <typename T>
-	T loadMeshFromFile(const std::string& file);
-	template <typename T>
-	T loadMeshFromMemory(const std::string& file);
+	Mesh* loadMeshFromFile(const std::string& file);
+	Mesh* loadMeshFromMemory(const void* buffer, size_t lenght);
 	template <typename T>
 	T loadModel(const std::string& file);
-	template <typename T>
-	T loadTexture(const std::string& file);
 
 private:
 	void createLogger();

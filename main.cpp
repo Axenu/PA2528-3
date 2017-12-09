@@ -19,7 +19,7 @@ void ImporterTests()
 	ImporterTester::imageFileTest("test_files/map_01.png");
 
 	// TGA
-
+	ImporterTester::imageFileTest("test_files/test.tga");
 
 	// OBJ
 	ImporterTester::modelFileTest("package tool/example/Cow.obj");

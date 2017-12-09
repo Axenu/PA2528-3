@@ -26,10 +26,8 @@ public:
 	bool importFromMemory(int importer, const void* buffer, size_t lenght);
 
 	// assimp
-	template <typename T>
-	T loadMeshFromFile(std::string file);
-	template <typename T>
-	T loadMeshFromMemory(const void* buffer, size_t lenght);
+	Mesh* loadMeshFromFile(std::string file);
+	Mesh* loadMeshFromMemory(const void* buffer, size_t lenght);
 
 	template <typename T>
 	T  loadModelFromFile(std::string file);

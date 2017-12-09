@@ -67,28 +67,24 @@ bool AssimpLoader::importFromMemory(const void* buffer, size_t lenght)
 	return true;
 }
 
-template <typename T>
-T AssimpLoader::loadMeshFromFile(const std::string& file)
+Mesh* AssimpLoader::loadMeshFromFile(const std::string& file)
 {
+	Mesh* mesh;
 
-	return true;
+	return mesh;
 }
 
-template <typename T>
-T AssimpLoader::loadMeshFromMemory(const std::string& file)
+Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t lenght)
 {
+	Mesh* mesh;
 
-	return true;
+
+
+	return mesh;
 }
 
 template <typename T>
 T AssimpLoader::loadModel(const std::string& file)
-{
-	return true;
-}
-
-template <typename T>
-T AssimpLoader::loadTexture(const std::string& file)
 {
 	return true;
 }

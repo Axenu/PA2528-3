@@ -77,16 +77,14 @@ bool ImporterManager::importFromMemory(int importer, const void* buffer, size_t 
 	return result;
 }
 
-template <typename T>
-T ImporterManager::loadMeshFromFile(std::string file)
+Mesh* ImporterManager::loadMeshFromFile(std::string file)
 {
-	return T();
+	return m_loaderAssimp->loadMeshFromFile(file);
 }
 
-template <typename T>
-T ImporterManager::loadMeshFromMemory(const void* buffer, size_t lenght)
+Mesh* ImporterManager::loadMeshFromMemory(const void* buffer, size_t lenght)
 {
-
+	return m_loaderAssimp->loadMeshFromMemory(buffer, lenght);
 }
 
 template <typename T>
