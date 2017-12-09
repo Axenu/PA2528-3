@@ -37,10 +37,10 @@ public:
 	T  loadModelFromMemory(const void* buffer, size_t lenght);
 	
 	// stb_image
-	unsigned char* loadTextureFromFile(std::string file, int width, int height);
-	unsigned char* loadTextureFromMemory(void* buffer, int length, int width, int height);
+	Texture* loadTextureFromFile(std::string file);
+	Texture* loadTextureFromMemory(void* buffer, int length);
 	
-	void freeTexture(unsigned char* image);
+	void freeTexture(Texture* texture);
 
 private:
 	//bool importUsingAssimp(std::string file);

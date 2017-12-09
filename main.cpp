@@ -13,14 +13,27 @@
 #include "ThreadPool.hpp"
 
 
+void ImporterTests()
+{
+	// PNG
+	ImporterTester::imageFileTest("test_files/map_01.png");
+
+	// TGA
+
+
+	// OBJ
+	ImporterTester::modelFileTest("package tool/example/Cow.obj");
+
+	// 2nd model format
+
+}
+
 int main()
 {
 	// simple importer tests
-	ImporterTester::imageFileTest("test_files/map_01.png");
+	ImporterTests();
 
-	ImporterTester::modelFileTest("package tool/example/Cow.obj");
-	// importer tests end
-
+	// package reader
 	PackageReader::setPackage("..\\..\\PA2528-3\\package tool\\res");
 
 	ThreadPool::initialize();

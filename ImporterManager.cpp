@@ -101,19 +101,23 @@ T ImporterManager::loadModelFromMemory(const void* buffer, size_t lenght)
 
 }
 
-unsigned char* ImporterManager::loadTextureFromFile(std::string file, int width, int height)
+Texture* ImporterManager::loadTextureFromFile(std::string file)
 {
-	return ImageLoader::loadFromFile(file.c_str(), width, height);
+	return ImageLoader::loadFromFile(file.c_str());
 }
 
-unsigned char* ImporterManager::loadTextureFromMemory(void* buffer, int length, int width, int height)
+Texture* ImporterManager::loadTextureFromMemory(void* buffer, int length)
 {
-	return ImageLoader::loadFromMemory(buffer, length, width, height);
+	return ImageLoader::loadFromMemory(buffer, length);
 }
 
-void ImporterManager::freeTexture(unsigned char* image)
+void ImporterManager::freeTexture(Texture* texture)
 {
-	ImageLoader::freeImage(image);
+	if (texture)
+	{
+		ImageLoader::freeImage(texture->image);
+		delete texture;
+	}
 }
 
 //bool ImporterManager::importUsingAssimp(std::string file)

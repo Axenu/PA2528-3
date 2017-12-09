@@ -26,16 +26,15 @@ public:
 
 	static void imageFileTest(std::string imagefile)
 	{
-		unsigned char* image;
-		int width = 0, height = 0;
+		Texture* texture = new Texture();
 
 		ImporterManager* importer = new ImporterManager();
 
 		std::cout << "Loading " << imagefile << " using stb_image." << std::endl;
-		image = importer->loadTextureFromFile(imagefile, width, height);
+		texture = importer->loadTextureFromFile(imagefile);
 
 		std::cout << "Unloading " << imagefile << " using stb_image." << std::endl;
-		importer->freeTexture(image);
+		importer->freeTexture(texture);
 
 		delete importer;
 
@@ -44,16 +43,15 @@ public:
 
 	static void imageMemoryTest(void* buffer, int length)
 	{
-		unsigned char* image;
-		int width = 0, height = 0;
+		Texture* texture = new Texture();
 
 		ImporterManager* importer = new ImporterManager();
 
 		std::cout << "Loading image from memory using stb_image." << std::endl;
-		image = importer->loadTextureFromMemory(buffer, length, width, height);
+		texture = importer->loadTextureFromMemory(buffer, length);
 
 		std::cout << "Unloading image from memory using stb_image." << std::endl;
-		importer->freeTexture(image);
+		importer->freeTexture(texture);
 
 		delete importer;
 
