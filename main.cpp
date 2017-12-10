@@ -4,9 +4,7 @@
 #include <cstring>
 #include <chrono>
 
-#include "ImporterManager.h"
 #include "ImporterTester.h"
-
 
 #include "PackageReader.hpp"
 #include "ResourceManager.hpp"
