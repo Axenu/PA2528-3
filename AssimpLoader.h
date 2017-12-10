@@ -22,10 +22,10 @@ public:
 	~AssimpLoader();
 
 	bool importFromFile(const std::string& file);
-	bool importFromMemory(const void* buffer, size_t lenght);
+	bool importFromMemory(const void* buffer, size_t length);
 
 	Mesh* loadMeshFromFile(const std::string& objFile);
-	Mesh* loadMeshFromMemory(const void* buffer, size_t lenght);
+	Mesh* loadMeshFromMemory(const void* buffer, size_t length);
 	template <typename T>
 	T loadModel(const std::string& file);
 

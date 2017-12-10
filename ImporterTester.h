@@ -90,6 +90,26 @@ public:
 
 		return mesh;
 	}
+
+	static Mesh* meshMemoryTest(const void* buffer, size_t length)
+	{
+		std::cout << "Assimp Loading mesh from memory." << std::endl;
+		AssimpLoader* loader = new AssimpLoader();
+		Mesh* mesh = loader->loadMeshFromMemory(buffer, length);
+
+		if (mesh)
+		{
+			std::cout << "Successfully Loaded mesh from memory!" << std::endl;
+		}
+		else
+		{
+			std::cout << "Failed to load mesh from memory!" << std::endl;
+		}
+
+		delete loader;
+
+		return mesh;
+	}
 };
 
 #endif

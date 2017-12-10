@@ -55,13 +55,13 @@ bool AssimpLoader::importFromFile(const std::string& file)
 	return true;
 }
 
-bool AssimpLoader::importFromMemory(const void* buffer, size_t lenght)
+bool AssimpLoader::importFromMemory(const void* buffer, size_t length)
 {
-	// buffer = pointer to file data, lenght = lenght of buffer in bytes
+	// buffer = pointer to file data, length = length of buffer in bytes
 
 	// read file from memory and do post processing using one of the assimp presets
 	// aiProcessPreset_TargetRealtime_Quality
-	m_scene = m_importer.ReadFileFromMemory(buffer, lenght, aiProcessPreset_TargetRealtime_Quality);
+	m_scene = m_importer.ReadFileFromMemory(buffer, length, aiProcessPreset_TargetRealtime_Quality);
 
 	// check for errors
 	if (!m_scene)
@@ -101,7 +101,7 @@ Mesh* AssimpLoader::loadMeshFromFile(const std::string& objFile)
 	return mesh;
 }
 
-Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t lenght)
+Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length)
 {
 	Mesh* mesh;
 

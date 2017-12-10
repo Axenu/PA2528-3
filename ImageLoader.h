@@ -8,7 +8,6 @@
 class ImageLoader
 {
 public:
-	//unsigned char*  ImageLoader::loadFromFile(const char* file)
 	static Texture* loadFromFile(const char* file);
 
 	static Texture* loadFromMemory(void* buffer, int length);

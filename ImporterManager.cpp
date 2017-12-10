@@ -55,14 +55,14 @@ bool ImporterManager::importFromFile(int importer, std::string file)
 	return result;
 }
 
-bool ImporterManager::importFromMemory(int importer, const void* buffer, size_t lenght)
+bool ImporterManager::importFromMemory(int importer, const void* buffer, size_t length)
 {
 	bool result;
 
 	switch (importer)
 	{
 	case loader_assimp:
-		result = m_loaderAssimp->importFromMemory(buffer, lenght);
+		result = m_loaderAssimp->importFromMemory(buffer, length);
 		break;
 
 	case loader_stb_image:
@@ -80,9 +80,9 @@ Mesh* ImporterManager::loadMeshFromFile(std::string file)
 	return m_loaderAssimp->loadMeshFromFile(file);
 }
 
-Mesh* ImporterManager::loadMeshFromMemory(const void* buffer, size_t lenght)
+Mesh* ImporterManager::loadMeshFromMemory(const void* buffer, size_t length)
 {
-	return m_loaderAssimp->loadMeshFromMemory(buffer, lenght);
+	return m_loaderAssimp->loadMeshFromMemory(buffer, length);
 }
 
 template <typename T>
@@ -92,7 +92,7 @@ T ImporterManager::loadModelFromFile(std::string file)
 }
 
 template <typename T>
-T ImporterManager::loadModelFromMemory(const void* buffer, size_t lenght)
+T ImporterManager::loadModelFromMemory(const void* buffer, size_t length)
 {
 
 }
