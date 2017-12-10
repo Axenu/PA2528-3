@@ -87,7 +87,10 @@ int main()
 	}
 	std::cout << "Loading resources took " << count << " waits";
 
-
+    mp2.wait();
+    mp3.wait();
+    mp4.wait();
+    mp5.wait();
 	PackageReader::clearPackage();
 
 	int i;
