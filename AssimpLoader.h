@@ -26,8 +26,6 @@ public:
 
 	Mesh* loadMeshFromFile(const std::string& objFile);
 	Mesh* loadMeshFromMemory(const void* buffer, size_t length);
-	template <typename T>
-	T loadModel(const std::string& file);
 
 private:
 	void createLogger();
