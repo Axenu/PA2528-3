@@ -86,7 +86,8 @@ void PackageReader::clearPackage() {
 
 // Return pointer to texture resource with specified GUI. Return nullptr if not found.
 Texture* PackageReader::loadTexture(gui_t gui) {
-	void* mem = loadFile(gui);
+	size_t index = 0;
+	void* mem = loadFile(gui, index);
     
 	if (!mem)
 		return nullptr;
@@ -95,7 +96,7 @@ Texture* PackageReader::loadTexture(gui_t gui) {
 	ImporterManager* importer = new ImporterManager();
 	Texture* texture = new Texture();	
 	
-	texture = importer->loadTextureFromMemory(mem, metaData.data[gui].size);
+	texture = importer->loadTextureFromMemory(mem, metaData.data[index].size);
 
 	delete importer;
 
@@ -106,7 +107,8 @@ Texture* PackageReader::loadTexture(gui_t gui) {
 
 // Return pointer to mesh resource with specified GUI. Return nullptr if not found.
 Mesh* PackageReader::loadMesh(gui_t gui) {
-	void* mem = loadFile(gui);
+	size_t index = 0;
+	void* mem = loadFile(gui, index);
 
 	if (!mem)
 		return nullptr;
@@ -115,7 +117,7 @@ Mesh* PackageReader::loadMesh(gui_t gui) {
 	Mesh* mesh = new Mesh();
 	ImporterManager* importer = new ImporterManager();
 
-	mesh = importer->loadMeshFromMemory(mem, metaData.data[gui].size);
+	mesh = importer->loadMeshFromMemory(mem, metaData.data[index].size);
 
 	delete importer;
 
@@ -153,13 +155,16 @@ void PackageReader::closeFile()
 }
 
 // Searches for and loads a file from the package into memory. Caller is responsible for the returned memory.
-void* PackageReader::loadFile(gui_t gui)
+void* PackageReader::loadFile(gui_t gui, size_t& metaDataPos)
 {
 	for (size_t i = 0; i < numResourcesInPackage; ++i) {
 		if (metaData.data[i].gui == gui) {
 			if (metaData.data[i].type == PackageReader::MetaData::Type::INVALID) {
 				return nullptr;
 			}
+
+			// Return index in the metaData array
+			metaDataPos = i;
 
 			openFile();
 

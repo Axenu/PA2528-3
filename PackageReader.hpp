@@ -53,7 +53,8 @@ class PackageReader {
 		static void closeFile();
 
 		// Searches for and loads a file from the package into memory. Caller is responsible for the returned memory.
-		static void* loadFile(gui_t gui);
+		// metaDataPos will contain index of the file in the metaData array.
+		static void* loadFile(gui_t gui, size_t& metaDataPos);
 
 		static std::string packagePath;
 		static Array<MetaData> metaData;
