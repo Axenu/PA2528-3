@@ -115,12 +115,3 @@ void ImporterManager::freeTexture(Texture* texture)
 		delete texture;
 	}
 }
-
-//bool ImporterManager::importUsingAssimp(std::string file)
-//{
-//	bool result;
-//
-//	result = m_loaderAssimp->importFile(file);
-//
-//	return result;
-//}

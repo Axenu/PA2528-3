@@ -9,17 +9,22 @@
 Texture* ImageLoader::loadFromFile(const char* file)
 {
 	Texture* texture = new Texture();
-	int comp = 0;
 
 	// load the texture image from image file
-	unsigned char* image = stbi_load(file, &texture->width, &texture->height, &comp, STBI_rgb_alpha);
+	unsigned char* image = stbi_load(file, &texture->width, &texture->height, &texture->composition, STBI_rgb_alpha);
 
 	// do additional data processing here
 
+	// debugging code
 	if (image == nullptr)
-		std::cout << "Stb_image failed to load texture from file: " << file << std::endl;
+		std::cout << "Stb_image failed to load texture " << file << std::endl;
 	else
-		std::cout << "Stb_image successfully loaded texture from file: " << file << " | width: " << texture->width << " | height: " << texture->height << " | composition: " << comp << std::endl;
+	{
+		std::cout << "Stb_image successfully loaded texture from " << file << std::endl;
+		std::cout << "Width_______| " << texture->width << std::endl;
+		std::cout << "Height______| " << texture->height << std::endl;
+		std::cout << "Composition_| " << texture->composition << std::endl;
+	}		
 
 	// store the image inside the texture class as an unsigned char*
 	texture->image = image;
@@ -30,7 +35,7 @@ Texture* ImageLoader::loadFromFile(const char* file)
 Texture* ImageLoader::loadFromMemory(void* buffer, int length)
 {
 	Texture* texture = new Texture();
-	const stbi_uc* temp;
+	const stbi_uc* temp; // temp pointer used for converting the void* pointer to a format that stbi can read.
 
 	// convert the void pointer into stbi_uc
 	temp = static_cast<stbi_uc*>(buffer); // not tested yet (wip)
@@ -41,9 +46,14 @@ Texture* ImageLoader::loadFromMemory(void* buffer, int length)
 	// do additional data processing here
 
 	if (image == nullptr)
-		std::cout << "Stb_image failed to load texture from memory" << std::endl;
+		std::cout << "Stb_image failed to load texture from memory." << std::endl;
 	else
-		std::cout << "Stb_image successfully loaded texture from memory | width: " << texture->width << " | height: " << texture->height << std::endl;
+	{
+		std::cout << "Stb_image successfully loaded texture from memory." << std::endl;
+		std::cout << "Width_______| " << texture->width << std::endl;
+		std::cout << "Height______| " << texture->height << std::endl;
+		std::cout << "Composition_| " << texture->composition << std::endl;
+	}
 
 	// store the image inside the texture class as an unsigned char*
 	texture->image = image;

@@ -41,6 +41,16 @@ bool AssimpLoader::importFromFile(const std::string& file)
 	// access file content
 	logInfo("Imported scene " + file + " without errors.");
 
+	// code used for debugging purposes.
+	// comment out or delete for better performance
+	std::cout << "Assimp imported " << file << std::endl;
+	std::cout << "Animations_| " << m_scene->mNumAnimations << std::endl;
+	std::cout << "Cameras____| " << m_scene->mNumCameras << std::endl;
+	std::cout << "Lights_____| " << m_scene->mNumLights << std::endl;
+	std::cout << "Materials__| " << m_scene->mNumMaterials << std::endl;
+	std::cout << "Meshes_____| " << m_scene->mNumMeshes << std::endl;
+	std::cout << "Textures___| " << m_scene->mNumTextures << std::endl;
+
 	// done
 	return true;
 }

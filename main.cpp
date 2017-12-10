@@ -17,24 +17,42 @@ void ImporterTests()
 {
 	// Importer init test
 	ImporterTester::importerTest();
-	std::getchar();
+	std::cout << std::endl;
 
 	// PNG
-	ImporterTester::imageFileTest("test_files/test.png");
-	std::getchar();
-	
+	ImporterTester::imageFileTest("test_files/textures/test.png");
+	std::cout << std::endl;
+
 	// TGA
-	ImporterTester::imageFileTest("test_files/test.tga");
-	std::getchar();
+	ImporterTester::imageFileTest("test_files/textures/test.tga");
+	std::cout << std::endl;
 
 	// OBJ
+	ImporterTester::modelFileTest("package tool/example/Bookcase_Empty.obj");
+	std::cout << std::endl;
 	ImporterTester::modelFileTest("package tool/example/Cow.obj");
-	std::getchar();
+	std::cout << std::endl;
+	/*ImporterTester::modelFileTest("package tool/example/Predator_OBJ.OBJ");
+	std::cout << std::endl;*/
 
 	// PLY
+	ImporterTester::modelFileTest("test_files/models/cube.ply");
+	std::cout << std::endl;
+	ImporterTester::modelFileTest("test_files/models/Wuson.ply");
+	std::cout << std::endl;
+	//ImporterTester::modelFileTest("test_files/models/pond.0.ply");
+	//std::cout << std::endl;
 
 	// load mesh using assimp
-	Mesh* mesh = ImporterTester::meshFileTest("package tool/example/Cow.obj");
+	// OBJ
+	Mesh* meshObj = ImporterTester::meshFileTest("package tool/example/Cow.obj");
+	std::cout << std::endl;
+	delete meshObj;
+
+	// PLY
+	Mesh* meshPly = ImporterTester::meshFileTest("test_files/models/Wuson.ply");
+	delete meshPly;
+
 	std::getchar();
 }
 
