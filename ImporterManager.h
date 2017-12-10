@@ -28,11 +28,6 @@ public:
 	// assimp
 	Mesh* loadMeshFromFile(std::string file);
 	Mesh* loadMeshFromMemory(const void* buffer, size_t length);
-
-	template <typename T>
-	T  loadModelFromFile(std::string file);
-	template <typename T>
-	T  loadModelFromMemory(const void* buffer, size_t length);
 	
 	// stb_image
 	Texture* loadTextureFromFile(std::string file);

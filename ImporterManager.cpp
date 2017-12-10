@@ -85,18 +85,6 @@ Mesh* ImporterManager::loadMeshFromMemory(const void* buffer, size_t length)
 	return m_loaderAssimp->loadMeshFromMemory(buffer, length);
 }
 
-template <typename T>
-T ImporterManager::loadModelFromFile(std::string file)
-{
-
-}
-
-template <typename T>
-T ImporterManager::loadModelFromMemory(const void* buffer, size_t length)
-{
-
-}
-
 Texture* ImporterManager::loadTextureFromFile(std::string file)
 {
 	return ImageLoader::loadFromFile(file.c_str());
