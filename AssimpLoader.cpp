@@ -103,17 +103,30 @@ Mesh* AssimpLoader::loadMeshFromFile(const std::string& objFile)
 
 Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length)
 {
-	Mesh* mesh;
+	Mesh* mesh = new Mesh();
 
+	/*pHint	An additional hint to the library.
+	If this is a non empty string, the library looks for a loader to support the file extension specified by pHint and passes the file to the first matching loader.
+	If this loader is unable to completely the request, the library continues and tries to determine the file format on its own,
+	a task that may or may not be successful.Check the return value, and you'll know ...*/
+	m_scene = m_importer.ReadFileFromMemory(buffer, length, aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
 
+	// check for errors
+	if (!m_scene)
+	{
+		logInfo(m_importer.GetErrorString());
+		return nullptr;
+	}
+
+	// access file content
+	logInfo("Imported scene from memory without errors.");
+
+	// code for extracting the mesh from scene into the mesh class here
+	aiMesh *temp = m_scene->mMeshes[0];
+
+	mesh->aiMesh = temp;
 
 	return mesh;
-}
-
-template <typename T>
-T AssimpLoader::loadModel(const std::string& objFile)
-{
-	return true;
 }
 
 void AssimpLoader::createLogger()
