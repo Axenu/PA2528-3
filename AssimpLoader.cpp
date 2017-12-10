@@ -87,7 +87,7 @@ Mesh* AssimpLoader::loadMeshFromFile(const std::string& objFile)
 	if (!m_scene)
 	{
 		logInfo(m_importer.GetErrorString());
-		return false;
+		return nullptr;
 	}
 
 	// access file content
