@@ -1,3 +1,5 @@
+#include <Windows.h>
+
 #include "PackageReader.hpp"
 
 #include "Texture.hpp"
@@ -10,6 +12,8 @@ size_t PackageReader::numResourcesInPackage = 0;
 void* PackageReader::rawFile = nullptr;
 std::ifstream PackageReader::file;
 size_t PackageReader::baseOffset = 0;
+long PackageReader::sectorSize = 0;
+HANDLE PackageReader::fileHandle;
 
 
 // Return true if package is found and valid. Else false.
@@ -71,6 +75,10 @@ bool PackageReader::setPackage(const char* path) {
 
 	closeFile();
 	delete[] temp;
+
+	if (!sectorSize)
+		findSectorSize();
+
 	return true;
 }
 
@@ -87,20 +95,18 @@ void PackageReader::clearPackage() {
 // Return pointer to texture resource with specified GUI. Return nullptr if not found.
 Texture* PackageReader::loadTexture(gui_t gui) {
 	size_t index = 0;
-	void* mem = loadFile(gui, index);
+	OffsetPointer<void> mem = loadFile(gui, index);
     
-	if (!mem)
+	if (!mem.getPointer())
 		return nullptr;
 
 	// Read memory data into new texture (stb_image)
 	ImporterManager* importer = new ImporterManager();
 	Texture* texture = new Texture();	
 	
-	texture = importer->loadTextureFromMemory(mem, metaData.data[index].size);
+	texture = importer->loadTextureFromMemory(mem.getPointer(), metaData.data[index].size);
 
 	delete importer;
-
-	free(mem);
 
 	return texture;	// return texture
 }
@@ -108,20 +114,18 @@ Texture* PackageReader::loadTexture(gui_t gui) {
 // Return pointer to mesh resource with specified GUI. Return nullptr if not found.
 Mesh* PackageReader::loadMesh(gui_t gui) {
 	size_t index = 0;
-	void* mem = loadFile(gui, index);
+	OffsetPointer<void> mem = loadFile(gui, index);
 
-	if (!mem)
+	if (!mem.getPointer)
 		return nullptr;
 
 	// Read memory data into new mesh (assimp)
 	Mesh* mesh = new Mesh();
 	ImporterManager* importer = new ImporterManager();
 
-	mesh = importer->loadMeshFromMemory(mem, metaData.data[index].size);
+	mesh = importer->loadMeshFromMemory(mem.getPointer(), metaData.data[index].size);
 
 	delete importer;
-
-	free(mem);
 
 	return mesh;	// return mesh
 }
@@ -155,32 +159,70 @@ void PackageReader::closeFile()
 }
 
 // Searches for and loads a file from the package into memory. Caller is responsible for the returned memory.
-void* PackageReader::loadFile(gui_t gui, size_t& metaDataPos)
+// metaDataPos will contain index of the file in the metaData array.
+OffsetPointer<void> PackageReader::loadFile(gui_t gui, size_t& metaDataPos)
 {
 	for (size_t i = 0; i < numResourcesInPackage; ++i) {
 		if (metaData.data[i].gui == gui) {
 			if (metaData.data[i].type == PackageReader::MetaData::Type::INVALID) {
-				return nullptr;
+				return OffsetPointer<void>();
 			}
 
 			// Return index in the metaData array
 			metaDataPos = i;
 
-			openFile();
+			void* rawMem = malloc(sectorSize + metaData.data[i].size);
 
-			file.seekg(metaData.data[i].offset + baseOffset);
+			uintptr_t misalignedBytes = reinterpret_cast<uintptr_t>(rawMem) & (sectorSize - 1);
+			unsigned int adjustment = sectorSize - misalignedBytes;
 
-			// Allocate memory for the file
-			char* mem = static_cast<char*>(malloc(metaData.data[i].size));
+			long* alignedMem = reinterpret_cast<long*>(reinterpret_cast<uintptr_t>(rawMem) + adjustment);
 
-			// Read the file into memory
-			file.read(mem, metaData.data[i].size);
 
-			closeFile();
+			fileHandle = CreateFile(L"buftest", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
 
-			return mem;
+			SetFilePointer(fileHandle, metaData.data[i].offset + baseOffset, NULL, FILE_BEGIN);
+
+			LPDWORD bytesRead = new DWORD;
+			ReadFile(fileHandle, alignedMem, metaData.data[i].size, bytesRead, NULL);
+			CloseHandle(fileHandle);
+
+			if (*bytesRead != metaData.data[i].size) {
+				std::cerr << "Error loading file!";
+				return OffsetPointer<void>();
+			}
+
+			delete bytesRead;
+
+			return OffsetPointer<void>(alignedMem, adjustment);
 		}
 	}
 
-	return nullptr;
+	return OffsetPointer<void>();
+}
+
+void PackageReader::findSectorSize()
+{
+	// Get disk sector size
+	STORAGE_ACCESS_ALIGNMENT_DESCRIPTOR alignment = { 0 };
+	WCHAR disk[] = L"\\\\.\\C:";
+
+
+	DWORD Bytes = 0;
+	STORAGE_PROPERTY_QUERY Query;
+
+	ZeroMemory(&Query, sizeof(Query));
+
+	HANDLE device = CreateFileW(disk, STANDARD_RIGHTS_READ, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL, NULL);
+
+	Query.QueryType = PropertyStandardQuery;
+	Query.PropertyId = StorageAccessAlignmentProperty;
+
+	DeviceIoControl(device, IOCTL_STORAGE_QUERY_PROPERTY, &Query, sizeof(STORAGE_PROPERTY_QUERY), &alignment,
+		sizeof(STORAGE_ACCESS_ALIGNMENT_DESCRIPTOR), &Bytes, NULL);
+
+	CloseHandle(device);
+
+	sectorSize = alignment.BytesPerPhysicalSector;
 }

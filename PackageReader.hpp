@@ -3,9 +3,10 @@
 
 #include <string>
 #include <fstream>
+
 #include "Array.hpp"
 #include "gui_t.hpp"
-
+#include "OffsetPointer.hpp"
 #include "ImporterManager.h"
 
 class Texture;
@@ -54,18 +55,25 @@ class PackageReader {
 
 		// Searches for and loads a file from the package into memory. Caller is responsible for the returned memory.
 		// metaDataPos will contain index of the file in the metaData array.
-		static void* loadFile(gui_t gui, size_t& metaDataPos);
+		static OffsetPointer<void> loadFile(gui_t gui, size_t& metaDataPos);
+
+		// Checks the sector size of the C drive
+		static void findSectorSize();
 
 		static std::string packagePath;
 		static Array<MetaData> metaData;
 		static size_t numResourcesInPackage;
 		static std::ifstream file;
+		static HANDLE fileHandle;
 
 		// The location of the beginning of the first file.
 		static size_t baseOffset;
 
 		// Contains a resource file copied from disk to be converted into a mesh/image.
 		static void* rawFile;
+
+		// Size of a sector on the C drive. Used for unbuffered reading.
+		static long sectorSize;
 };
 
 #endif // __PACKAGE_READER__
