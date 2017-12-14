@@ -5,7 +5,8 @@
 
 class Mesh { // or struct - doesn't matter
 public:
-	aiMesh* aiMesh;
+	aiMesh* aiMesh[2];
+	int numMeshes;
 };
 #endif // __MESH__
 

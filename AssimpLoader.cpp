@@ -22,7 +22,7 @@ bool AssimpLoader::importFromFile(const std::string& file)
 	}
 	else
 	{
-		std::cout << "Unable to open file: " << file << std::endl;
+		std::cerr << "Unable to open file: " << file << std::endl;
 		logInfo(m_importer.GetErrorString());
 		return false;
 	}
@@ -43,13 +43,13 @@ bool AssimpLoader::importFromFile(const std::string& file)
 
 	// code used for debugging purposes.
 	// comment out or delete for better performance
-	std::cout << "Assimp imported " << file << std::endl;
-	std::cout << "Animations_| " << m_scene->mNumAnimations << std::endl;
-	std::cout << "Cameras____| " << m_scene->mNumCameras << std::endl;
-	std::cout << "Lights_____| " << m_scene->mNumLights << std::endl;
-	std::cout << "Materials__| " << m_scene->mNumMaterials << std::endl;
-	std::cout << "Meshes_____| " << m_scene->mNumMeshes << std::endl;
-	std::cout << "Textures___| " << m_scene->mNumTextures << std::endl;
+	std::cerr << "Assimp imported " << file << std::endl;
+	std::cerr << "Animations_| " << m_scene->mNumAnimations << std::endl;
+	std::cerr << "Cameras____| " << m_scene->mNumCameras << std::endl;
+	std::cerr << "Lights_____| " << m_scene->mNumLights << std::endl;
+	std::cerr << "Materials__| " << m_scene->mNumMaterials << std::endl;
+	std::cerr << "Meshes_____| " << m_scene->mNumMeshes << std::endl;
+	std::cerr << "Textures___| " << m_scene->mNumTextures << std::endl;
 
 	// done
 	return true;
@@ -75,13 +75,13 @@ bool AssimpLoader::importFromMemory(const void* buffer, size_t length)
 
 	// code used for debugging purposes.
 	// comment out or delete for better performance
-	std::cout << "Assimp imported from memory: " << buffer << std::endl;
-	std::cout << "Animations_| " << m_scene->mNumAnimations << std::endl;
-	std::cout << "Cameras____| " << m_scene->mNumCameras << std::endl;
-	std::cout << "Lights_____| " << m_scene->mNumLights << std::endl;
-	std::cout << "Materials__| " << m_scene->mNumMaterials << std::endl;
-	std::cout << "Meshes_____| " << m_scene->mNumMeshes << std::endl;
-	std::cout << "Textures___| " << m_scene->mNumTextures << std::endl;
+	std::cerr << "Assimp imported from memory: " << buffer << std::endl;
+	std::cerr << "Animations_| " << m_scene->mNumAnimations << std::endl;
+	std::cerr << "Cameras____| " << m_scene->mNumCameras << std::endl;
+	std::cerr << "Lights_____| " << m_scene->mNumLights << std::endl;
+	std::cerr << "Materials__| " << m_scene->mNumMaterials << std::endl;
+	std::cerr << "Meshes_____| " << m_scene->mNumMeshes << std::endl;
+	std::cerr << "Textures___| " << m_scene->mNumTextures << std::endl;
 
 	// done
 	return true;
@@ -103,10 +103,24 @@ Mesh* AssimpLoader::loadMeshFromFile(const std::string& objFile)
 	// access file content
 	logInfo("Imported scene " + objFile + " without errors.");
 
+	// code used for debugging purposes.
+	// comment out or delete for better performance
+	std::cerr << "Assimp imported obj from : " << objFile << std::endl;
+	std::cerr << "Meshes: " << m_scene->mNumMeshes << std::endl;
+	for (int i = 0; i < m_scene->mNumMeshes; ++i)
+	{
+		std::cerr << "Mesh" << i << std::endl;
+		std::cerr << "Vertices_| " << m_scene->mMeshes[i]->mNumVertices << std::endl;
+		std::cerr << "Faces____| " << m_scene->mMeshes[i]->mNumFaces << std::endl;
+	}
+
 	// code for extracting the mesh from scene into the mesh class here
-	aiMesh *temp = m_scene->mMeshes[0];
+	mesh->numMeshes = m_scene->mNumMeshes;
 	
-	mesh->aiMesh = temp;
+	for (int i = 0; i < m_scene->mNumMeshes; ++i)
+	{
+		mesh->aiMesh[i] = m_scene->mMeshes[i];
+	}
 
 	return mesh;
 }
@@ -131,10 +145,24 @@ Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length)
 	// access file content
 	logInfo("Imported scene from memory without errors.");
 
-	// code for extracting the mesh from scene into the mesh class here
-	aiMesh *temp = m_scene->mMeshes[0];
+	// code used for debugging purposes.
+	// comment out or delete for better performance
+	std::cerr << "Assimp imported obj from memory: " << buffer << std::endl;
+	std::cerr << "Meshes: " << m_scene->mNumMeshes << std::endl;
+	for (int i = 0; i < m_scene->mNumMeshes; ++i)
+	{
+		std::cerr << "Mesh" << i << std::endl;
+		std::cerr << "Vertices_| " << m_scene->mMeshes[i]->mNumVertices << std::endl;
+		std::cerr << "Faces____| " << m_scene->mMeshes[i]->mNumFaces << std::endl;
+	}
 
-	mesh->aiMesh = temp;
+	// code for extracting the mesh from scene into the mesh class here
+	mesh->numMeshes = m_scene->mNumMeshes;
+
+	for (int i = 0; i < m_scene->mNumMeshes; ++i)
+	{
+		mesh->aiMesh[i] = m_scene->mMeshes[i];
+	}
 
 	return mesh;
 }

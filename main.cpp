@@ -91,7 +91,7 @@ void testUnbuffered() {
 
 void ImporterTests()
 {
-	// Importer init test
+	/*// Importer init test
 	ImporterTester::importerTest();
 	std::cout << std::endl;
 
@@ -109,7 +109,7 @@ void ImporterTests()
 	ImporterTester::modelFileTest("package tool/example/Cow.obj");
 	std::cout << std::endl;
 	/*ImporterTester::modelFileTest("package tool/example/Predator_OBJ.OBJ");
-	std::cout << std::endl;*/
+	std::cout << std::endl;
 
 	// PLY
 	ImporterTester::modelFileTest("test_files/models/cube.ply");
@@ -117,17 +117,21 @@ void ImporterTests()
 	ImporterTester::modelFileTest("test_files/models/Wuson.ply");
 	std::cout << std::endl;
 	//ImporterTester::modelFileTest("test_files/models/pond.0.ply");
-	//std::cout << std::endl;
+	//std::cout << std::endl;*/
 
 	// load mesh using assimp
 	// OBJ
-	Mesh* meshObj = ImporterTester::meshFileTest("package tool/example/Cow.obj");
+	Mesh* meshObj = ImporterTester::meshFileTest("package tool/example/Bookcase_Empty.obj");
+	std::cout << std::endl;
+	meshObj = ImporterTester::meshFileTest("package tool/example/Cow.obj");
+	std::cout << std::endl;
+	meshObj = ImporterTester::meshFileTest("package tool/example/Predator_OBJ.OBJ");
 	std::cout << std::endl;
 	delete meshObj;
 
-	// PLY
-	Mesh* meshPly = ImporterTester::meshFileTest("test_files/models/Wuson.ply");
-	delete meshPly;
+	//// PLY
+	//Mesh* meshPly = ImporterTester::meshFileTest("test_files/models/Wuson.ply");
+	//delete meshPly;
 
 	std::getchar();
 }
