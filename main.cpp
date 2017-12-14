@@ -149,7 +149,7 @@ int main()
 	//Promise<SharedPtr<Mesh>> mp1 = ResourceManager::aloadMesh(6042386530102251393);
 	//Promise<SharedPtr<Mesh>> mp2= ResourceManager::aloadMesh(6042386530102251393);
 	//Promise<SharedPtr<Mesh>> mp3 = ResourceManager::aloadMesh(6042386530102251393);
-	Promise<SharedPtr<Mesh>> mp5 = ResourceManager::aloadMesh(6042386530102251393);
+	Promise<SharedPtr<Mesh>> mp5 = ResourceManager::aloadMesh(6722305721597800034);
 	//Promise<SharedPtr<Texture>> mp5 = ResourceManager::aloadTexture(9181609965336431992);
 
 	int count = 0;
@@ -162,7 +162,7 @@ int main()
 	}
 	std::cout << "Loading resources took " << count << " loops, which proves that it's asynchronous" << std::endl;
 
-	Promise<SharedPtr<Mesh>> mp6 = ResourceManager::aloadMesh(6042386530102251393);
+	Promise<SharedPtr<Mesh>> mp6 = ResourceManager::aloadMesh(6722305721597800034);
 	count = 0;
 	while (true) {
 		if (mp6.isReady()) {
@@ -173,8 +173,8 @@ int main()
 	}
 	std::cout << "Loading resources took " << count << " loops the second time, much faster!" << std::endl;
 
-	delete mp5.get().get();
-	delete mp6.get().get();
+	mp5.get() = (Mesh*)nullptr;
+	mp6.get() = (Mesh*)nullptr;
 
 	ResourceManager::garbageCollectMeshes();
 
@@ -189,18 +189,18 @@ int main()
 	}
 	std::cout << "Loading resources took " << count << " loops. This time loaded from disk again, since previous instances where garbage collected" << std::endl;
 
-	for (int i = 0; i < 1000; i++) {
+	/*for (int i = 0; i < 1000; i++) {
 		ResourceManager::aloadMesh(6042386530102251393);
 		ResourceManager::aloadMesh(9181609965336431992);
-	}
+	}*/
 
 	std::cout << "Loading a lot of rescources took " << count << " loops." << std::endl;
 
 
 	PackageReader::clearPackage();
 
-	//int i;
-	//std::cin >> i;
+	int i;
+	std::cin >> i;
 
 	// Test buffered versus unbuffered IO
 	//testUnbuffered();

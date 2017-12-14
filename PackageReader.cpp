@@ -116,7 +116,7 @@ Mesh* PackageReader::loadMesh(gui_t gui) {
 	size_t index = 0;
 	OffsetPointer<void> mem = loadFile(gui, index);
 
-	if (!mem.getPointer)
+	if (!mem.getPointer())
 		return nullptr;
 
 	// Read memory data into new mesh (assimp)

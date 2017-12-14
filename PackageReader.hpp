@@ -3,6 +3,7 @@
 
 #include <string>
 #include <fstream>
+#include <Windows.h>
 
 #include "Array.hpp"
 #include "gui_t.hpp"

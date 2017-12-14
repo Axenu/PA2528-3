@@ -11,7 +11,7 @@ public:
 
 	~OffsetPointer();
 
-	freeMemory();
+	void freeOffsetMemory();
 
 	T* getPointer();
 
@@ -20,7 +20,6 @@ private:
 	unsigned int offset;
 };
 
-#endif
 
 template<typename T>
 inline OffsetPointer<T>::OffsetPointer()
@@ -39,11 +38,11 @@ inline OffsetPointer<T>::OffsetPointer(T * ptr, unsigned int offset)
 template<typename T>
 inline OffsetPointer<T>::~OffsetPointer()
 {
-	freeMemory();
+	freeOffsetMemory();
 }
 
 template<typename T>
-inline OffsetPointer<T>::freeMemory()
+inline void OffsetPointer<T>::freeOffsetMemory()
 {
 	if (pointer)
 		free(reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(pointer) - offset));
@@ -54,3 +53,5 @@ inline T* OffsetPointer<T>::getPointer()
 {
 	return pointer;
 }
+
+#endif
