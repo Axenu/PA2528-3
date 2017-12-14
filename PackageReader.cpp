@@ -6,7 +6,7 @@
 #include "Mesh.hpp"
 
 
-std::string PackageReader::packagePath;
+std::wstring PackageReader::packagePath;
 Array<PackageReader::MetaData> PackageReader::metaData;
 size_t PackageReader::numResourcesInPackage = 0;
 void* PackageReader::rawFile = nullptr;
@@ -21,7 +21,13 @@ bool PackageReader::setPackage(const char* path) {
 	// Clear current package, if any.
 	clearPackage();
 
-	packagePath = path;
+	// Convert path to wchar
+	const size_t cSize = strlen(path) + 1;
+	wchar_t* wc = new wchar_t[cSize];
+	size_t outSize;
+	mbstowcs_s(&outSize, wc, cSize, path, cSize-1);
+	packagePath = wc;
+	delete wc;
 
 	// Open file
 	openFile();
@@ -171,7 +177,8 @@ OffsetPointer<void> PackageReader::loadFile(gui_t gui, size_t& metaDataPos)
 			// Return index in the metaData array
 			metaDataPos = i;
 
-			void* rawMem = malloc(sectorSize + metaData.data[i].size);
+			// Add sectorSize * 3, one for alignment in memory, one for alignment in the file, one for additional space read at the end of a sector
+			void* rawMem = malloc(sectorSize * 3 + metaData.data[i].size);
 
 			uintptr_t misalignedBytes = reinterpret_cast<uintptr_t>(rawMem) & (sectorSize - 1);
 			unsigned int adjustment = sectorSize - misalignedBytes;
@@ -179,22 +186,32 @@ OffsetPointer<void> PackageReader::loadFile(gui_t gui, size_t& metaDataPos)
 			long* alignedMem = reinterpret_cast<long*>(reinterpret_cast<uintptr_t>(rawMem) + adjustment);
 
 
-			fileHandle = CreateFile(L"buftest", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
+			fileHandle = CreateFile(packagePath.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
+			HRESULT err = HRESULT_FROM_WIN32(GetLastError());
 
-			SetFilePointer(fileHandle, metaData.data[i].offset + baseOffset, NULL, FILE_BEGIN);
+			LONG signedOffset = static_cast<long>(metaData.data[i].offset + baseOffset);
+			// Find the closest previous sector in the file
+			long offsetFromFileSector = signedOffset % sectorSize;
 
+			SetFilePointer(fileHandle, signedOffset - offsetFromFileSector, NULL, FILE_BEGIN);
+			err = HRESULT_FROM_WIN32(GetLastError());
+
+			DWORD size = static_cast<unsigned long>(metaData.data[i].size);
+			// Add enough space to read an even number of sectors
+			size += sectorSize - (size % sectorSize);
 			LPDWORD bytesRead = new DWORD;
-			ReadFile(fileHandle, alignedMem, metaData.data[i].size, bytesRead, NULL);
+			ReadFile(fileHandle, alignedMem, size, bytesRead, NULL);
+			err = HRESULT_FROM_WIN32(GetLastError());
 			CloseHandle(fileHandle);
 
-			if (*bytesRead != metaData.data[i].size) {
+			if (*bytesRead != size) {
 				std::cerr << "Error loading file!";
 				return OffsetPointer<void>();
 			}
 
 			delete bytesRead;
 
-			return OffsetPointer<void>(alignedMem, adjustment);
+			return OffsetPointer<void>(reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(alignedMem) + offsetFromFileSector), adjustment + offsetFromFileSector);
 		}
 	}
 

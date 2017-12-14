@@ -61,7 +61,7 @@ class PackageReader {
 		// Checks the sector size of the C drive
 		static void findSectorSize();
 
-		static std::string packagePath;
+		static std::wstring packagePath;
 		static Array<MetaData> metaData;
 		static size_t numResourcesInPackage;
 		static std::ifstream file;
