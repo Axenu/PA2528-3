@@ -129,6 +129,8 @@ Mesh* PackageReader::loadMesh(gui_t gui) {
 	Mesh* mesh = new Mesh();
 	ImporterManager* importer = new ImporterManager();
 
+	importer->initLoader(0); // ínit assimp
+
 	mesh = importer->loadMeshFromMemory(mem.getPointer(), metaData.data[index].size);
 
 	delete importer;
