@@ -11,6 +11,12 @@ Semaphore ThreadPool::mSemaphore;
 SpinLock ThreadPool::mLock;
 
 void ThreadPool::initialize() {
+    static bool isInitialized = false;
+    if(isInitialized) {
+        return;
+    }
+    isInitialized = true;
+
     mIsRunning = true;
     mThreads = new Thread*[NUM_THREADS];
     for(size_t i = 0; i < NUM_THREADS; i++) {

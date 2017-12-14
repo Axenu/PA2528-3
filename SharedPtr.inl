@@ -72,7 +72,7 @@ T* SharedPtr<T>::assign(const SharedPtr<T>& other) {
 
 template<typename T>
 T* SharedPtr<T>::assign(T* other) {
-    mReferenceCount = new std::atomic<size_t>(1);
+    mReferenceCount = new Atomic(1);
     return swapPtr(other);
 }
 

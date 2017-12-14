@@ -23,7 +23,7 @@
     <ProjectGuid>{E6DB4747-5C49-46D1-960C-225140C6A462}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>PA25283</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -147,17 +147,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AssimpLoader.cpp" />
+    <ClCompile Include="Atomic.cpp" />
+    <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="ImporterManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PackageReader.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Semaphore.cpp" />
     <ClCompile Include="SpinLock.cpp" />
     <ClCompile Include="Thread.cpp" />
+    <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Array.hpp" />
     <ClInclude Include="AssimpLoader.h" />
+    <ClInclude Include="Atomic.hpp" />
     <ClInclude Include="Function.hpp" />
     <ClInclude Include="Functor.hpp" />
     <ClInclude Include="FunctorHelper.hpp" />
@@ -170,11 +175,14 @@
     <ClInclude Include="Mesh.hpp" />
     <ClInclude Include="PackageReader.hpp" />
     <ClInclude Include="Promise.hpp" />
+    <ClInclude Include="ResourceManager.hpp" />
+    <ClInclude Include="Semaphore.hpp" />
     <ClInclude Include="SharedPtr.hpp" />
     <ClInclude Include="SpinLock.hpp" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Texture.hpp" />
     <ClInclude Include="Thread.hpp" />
+    <ClInclude Include="ThreadPool.hpp" />
     <ClInclude Include="utility.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +194,7 @@
     <None Include="Lambda.inl" />
     <None Include="Promise.inl" />
     <None Include="SharedPtr.inl" />
+    <None Include="ThreadPool.inl" />
     <None Include="utility.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,7 +1,7 @@
 #ifndef __SPIN_LOCK__
 #define __SPIN_LOCK__
 
-#include <atomic>
+#include "Atomic.hpp"
 
 class SpinLock {
     public:
@@ -11,7 +11,7 @@ class SpinLock {
         void unlock();
 
     private:
-        std::atomic<bool> mIsLocked;
+        Atomic mIsLocked;
 };
 
 #endif // __SPIN_LOCK__

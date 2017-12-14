@@ -10,8 +10,7 @@ ImporterManager::ImporterManager()
 
 ImporterManager::~ImporterManager()
 {
-	if(m_loaderAssimp)
-		delete m_loaderAssimp;
+	
 }
 
 void ImporterManager::initLoader(int importer)
@@ -56,14 +55,14 @@ bool ImporterManager::importFromFile(int importer, std::string file)
 	return result;
 }
 
-bool ImporterManager::importFromMemory(int importer, const void* buffer, size_t lenght)
+bool ImporterManager::importFromMemory(int importer, const void* buffer, size_t length)
 {
 	bool result;
 
 	switch (importer)
 	{
 	case loader_assimp:
-		result = m_loaderAssimp->importFromMemory(buffer, lenght);
+		result = m_loaderAssimp->importFromMemory(buffer, length);
 		break;
 
 	case loader_stb_image:
@@ -76,29 +75,31 @@ bool ImporterManager::importFromMemory(int importer, const void* buffer, size_t 
 	return result;
 }
 
-template <typename T>
-T ImporterManager::importMesh(int importer, std::string file)
+Mesh* ImporterManager::loadMeshFromFile(std::string file)
 {
-
+	return m_loaderAssimp->loadMeshFromFile(file);
 }
 
-template <typename T>
-T ImporterManager::importModel(int importer, std::string file)
+Mesh* ImporterManager::loadMeshFromMemory(const void* buffer, size_t length)
 {
-	
+	return m_loaderAssimp->loadMeshFromMemory(buffer, length);
 }
 
-template <typename T>
-T ImporterManager::importTexture(int importer, std::string file)
+Texture* ImporterManager::loadTextureFromFile(std::string file)
 {
-
+	return ImageLoader::loadFromFile(file.c_str());
 }
 
-//bool ImporterManager::importUsingAssimp(std::string file)
-//{
-//	bool result;
-//
-//	result = m_loaderAssimp->importFile(file);
-//
-//	return result;
-//}
+Texture* ImporterManager::loadTextureFromMemory(void* buffer, int length)
+{
+	return ImageLoader::loadFromMemory(buffer, length);
+}
+
+void ImporterManager::freeTexture(Texture* texture)
+{
+	if (texture)
+	{
+		ImageLoader::freeImage(texture->image);
+		delete texture;
+	}
+}
