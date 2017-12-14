@@ -5,10 +5,15 @@
 #include "Texture.hpp"
 #include "Mesh.hpp"
 
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+#include <locale.h>
+
+
 
 std::wstring PackageReader::packagePath;
 Array<PackageReader::MetaData> PackageReader::metaData;
-size_t PackageReader::numResourcesInPackage = 0;
 void* PackageReader::rawFile = nullptr;
 std::ifstream PackageReader::file;
 size_t PackageReader::baseOffset = 0;
@@ -32,30 +37,38 @@ bool PackageReader::setPackage(const char* path) {
 	// Open file
 	openFile();
 
-	file >> numResourcesInPackage;
-	file.get(); // Removes newline
-	
-	metaData.data = new PackageReader::MetaData[numResourcesInPackage];
-	metaData.size = numResourcesInPackage;
+	baseOffset = 0;
 
 	const int maxStringLength = 300;
 	char* temp = new char[maxStringLength];
-	for (size_t i = 0; i < numResourcesInPackage; ++i) {
+
+	file.getline(temp, maxStringLength);
+	baseOffset += strlen(temp) + 1;
+	metaData.size = strtoll(temp, NULL, 10);
+	
+	metaData.data = new PackageReader::MetaData[metaData.size];
+
+	
+	for (size_t i = 0; i < metaData.size; ++i) {
 		// Read filename
 		file.getline(temp, maxStringLength, ':');
+		baseOffset += strlen(temp) + 1;
 
 		// Read GUI
 		file.getline(temp, maxStringLength, ':');
+		baseOffset += strlen(temp) + 1;
 
 		// Convert to bit representation and store in metadata array
 		metaData.data[i].gui = strtoll(temp, NULL, 10);
 
 		// Read file type
 		file.getline(temp, maxStringLength, ':');
+		baseOffset += strlen(temp) + 1;
 		// Currently unused
 
 		// Read resource type
 		file.getline(temp, maxStringLength, ':');
+		baseOffset += strlen(temp) + 1;
 
 		// Set appropriate resource type.
 		if (strcmp(temp, "M") == 0) {
@@ -71,13 +84,15 @@ bool PackageReader::setPackage(const char* path) {
 		// Read size
 		file.getline(temp, maxStringLength, ':');
 		metaData.data[i].size = strtol(temp, NULL, 10);
+		baseOffset += strlen(temp) + 1;
 
 		// Read offset
 		file.getline(temp, maxStringLength);
 		metaData.data[i].offset = strtol(temp, NULL, 10);
+		baseOffset += strlen(temp);
+
+		++baseOffset; // newline
 	}
-	// Set base offset to the next position (the start of the first file)
-	baseOffset = static_cast<size_t>(file.tellg());
 
 	closeFile();
 	delete[] temp;
@@ -152,9 +167,12 @@ Array<PackageReader::MetaData> PackageReader::getMetaData() {
 bool PackageReader::openFile()
 {
 	// Remove buffer
-	file.rdbuf()->pubsetbuf(0, 0);
 
 	file.open(packagePath);
+	if (!file.is_open()) {
+		char* msg = new char[1000];
+		std::cerr << "Error: " << strerror_s(msg, 1000, errno);
+	}
 
 	// Return the file's open status
 	return file.is_open();
@@ -170,7 +188,7 @@ void PackageReader::closeFile()
 // metaDataPos will contain index of the file in the metaData array.
 OffsetPointer<void> PackageReader::loadFile(gui_t gui, size_t& metaDataPos)
 {
-	for (size_t i = 0; i < numResourcesInPackage; ++i) {
+	for (size_t i = 0; i < metaData.size; ++i) {
 		if (metaData.data[i].gui == gui) {
 			if (metaData.data[i].type == PackageReader::MetaData::Type::INVALID) {
 				return OffsetPointer<void>();
@@ -206,14 +224,9 @@ OffsetPointer<void> PackageReader::loadFile(gui_t gui, size_t& metaDataPos)
 			err = HRESULT_FROM_WIN32(GetLastError());
 			CloseHandle(fileHandle);
 
-			if (*bytesRead != size) {
-				std::cerr << "Error loading file!";
-				return OffsetPointer<void>();
-			}
-
 			delete bytesRead;
 
-			return OffsetPointer<void>(reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(alignedMem) + offsetFromFileSector), adjustment + offsetFromFileSector);
+			return OffsetPointer<void>(reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(alignedMem) + static_cast<uintptr_t>(offsetFromFileSector)), adjustment + offsetFromFileSector);
 		}
 	}
 

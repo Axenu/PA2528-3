@@ -63,7 +63,6 @@ class PackageReader {
 
 		static std::wstring packagePath;
 		static Array<MetaData> metaData;
-		static size_t numResourcesInPackage;
 		static std::ifstream file;
 		static HANDLE fileHandle;
 
