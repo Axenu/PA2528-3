@@ -25,7 +25,7 @@ public:
 	bool importFromMemory(const void* buffer, size_t length);
 
 	Mesh* loadMeshFromFile(const std::string& objFile);
-	Mesh* loadMeshFromMemory(const void* buffer, size_t length);
+	Mesh* loadMeshFromMemory(const void* buffer, size_t length, const char* meshType = "obj");
 
 private:
 	void createLogger();

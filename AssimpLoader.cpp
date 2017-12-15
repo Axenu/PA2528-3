@@ -137,7 +137,7 @@ Mesh* AssimpLoader::loadMeshFromFile(const std::string& objFile)
 	return mesh;
 }
 
-Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length)
+Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length, const char* meshType)
 {
 	Mesh* mesh = new Mesh();
 
@@ -154,7 +154,7 @@ Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length)
 	//aiProcess_SplitLargeMeshes |
 	//aiProcess_JoinIdenticalVertices |
 	//aiProcess_ImproveCacheLocality, "obj");
-	m_scene = m_importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_SortByPType, "obj");
+	m_scene = m_importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_SortByPType, meshType);
 
 	// check for errors
 	if (!m_scene || m_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_scene->mRootNode)
