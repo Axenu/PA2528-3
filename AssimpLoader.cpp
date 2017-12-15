@@ -42,13 +42,13 @@ bool AssimpLoader::importFromFile(const std::string& file)
 
 	// code used for debugging purposes.
 	// comment out or delete for better performance
-	std::cerr << "Assimp imported " << file << std::endl;
+	/*std::cerr << "Assimp imported " << file << std::endl;
 	std::cerr << "Animations_| " << m_scene->mNumAnimations << std::endl;
 	std::cerr << "Cameras____| " << m_scene->mNumCameras << std::endl;
 	std::cerr << "Lights_____| " << m_scene->mNumLights << std::endl;
 	std::cerr << "Materials__| " << m_scene->mNumMaterials << std::endl;
 	std::cerr << "Meshes_____| " << m_scene->mNumMeshes << std::endl;
-	std::cerr << "Textures___| " << m_scene->mNumTextures << std::endl;
+	std::cerr << "Textures___| " << m_scene->mNumTextures << std::endl;*/
 
 	// done
 	return true;
@@ -74,13 +74,13 @@ bool AssimpLoader::importFromMemory(const void* buffer, size_t length)
 
 	// code used for debugging purposes.
 	// comment out or delete for better performance
-	std::cerr << "Assimp imported from memory: " << buffer << std::endl;
+	/*std::cerr << "Assimp imported from memory: " << buffer << std::endl;
 	std::cerr << "Animations_| " << m_scene->mNumAnimations << std::endl;
 	std::cerr << "Cameras____| " << m_scene->mNumCameras << std::endl;
 	std::cerr << "Lights_____| " << m_scene->mNumLights << std::endl;
 	std::cerr << "Materials__| " << m_scene->mNumMaterials << std::endl;
 	std::cerr << "Meshes_____| " << m_scene->mNumMeshes << std::endl;
-	std::cerr << "Textures___| " << m_scene->mNumTextures << std::endl;
+	std::cerr << "Textures___| " << m_scene->mNumTextures << std::endl;*/
 
 	// done
 	return true;
@@ -104,14 +104,14 @@ Mesh* AssimpLoader::loadMeshFromFile(const std::string& objFile)
 
 	// code used for debugging purposes.
 	// comment out or delete for better performance
-	std::cerr << "Assimp imported obj from : " << objFile << std::endl;
+	/*std::cerr << "Assimp imported obj from : " << objFile << std::endl;
 	std::cerr << "Meshes: " << m_scene->mNumMeshes << std::endl;
 	for (int i = 0; i < m_scene->mNumMeshes; ++i)
 	{
 		std::cerr << "Mesh" << i << std::endl;
 		std::cerr << "Vertices_| " << m_scene->mMeshes[i]->mNumVertices << std::endl;
 		std::cerr << "Faces____| " << m_scene->mMeshes[i]->mNumFaces << std::endl;
-	}
+	}*/
 
 	// code for extracting the mesh from scene into the mesh class here
 	mesh->numMeshes = m_scene->mNumMeshes;
@@ -150,6 +150,8 @@ Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length, FileTy
 		logInfo(m_importer.GetErrorString());
 
 		//Assimp::DefaultLogger::kill();
+	if (fileType == 4)
+		std::cerr << "Assimp tried to import INVALID file format from memory: " << buffer << std::endl;
 
 		return nullptr;
 	}
@@ -159,7 +161,7 @@ Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length, FileTy
 
 	// code used for debugging purposes.
 	// comment out or delete for better performance
-	if(fileType == 0)
+	/*if(fileType == 0)
 		std::cerr << "Assimp imported OBJ from memory: " << buffer << std::endl;
 	else if(fileType == 1)
 		std::cerr << "Assimp imported FBX from memory: " << buffer << std::endl;
@@ -170,7 +172,7 @@ Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length, FileTy
 		std::cerr << "Mesh" << i << std::endl;
 		std::cerr << "Vertices_| " << m_scene->mMeshes[i]->mNumVertices << std::endl;
 		std::cerr << "Faces____| " << m_scene->mMeshes[i]->mNumFaces << std::endl;
-	}
+	}*/
 
 	// code for extracting the mesh from scene into the mesh class here
 	mesh->numMeshes = m_scene->mNumMeshes;

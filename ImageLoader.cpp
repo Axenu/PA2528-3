@@ -16,7 +16,7 @@ Texture* ImageLoader::loadFromFile(const char* file)
 	// do additional data processing here
 
 	// debugging code
-	if (image == nullptr)
+/*	if (image == nullptr)
 		std::cerr << "Stb_image failed to load texture " << file << std::endl;
 	else
 	{
@@ -24,7 +24,7 @@ Texture* ImageLoader::loadFromFile(const char* file)
 		std::cerr << "Width_______| " << texture->width << std::endl;
 		std::cerr << "Height______| " << texture->height << std::endl;
 		std::cerr << "Composition_| " << texture->composition << std::endl;
-	}		
+	}	*/	
 
 	// store the image inside the texture class as an unsigned char*
 	texture->image = image;
@@ -45,15 +45,23 @@ Texture* ImageLoader::loadFromMemory(void* buffer, int length, FileType fileType
 
 	// do additional data processing here
 
-	if (image == nullptr)
-		std::cerr << "Stb_image failed to load texture from memory." << std::endl;
+	// debugging code
+	/*if (image == nullptr)
+	{
+		if(fileType == 2)
+			std::cerr << "Stb_image failed to load TGA from memory." << std::endl;
+		else if (fileType == 3)
+			std::cerr << "Stb_image failed to load PNG from memory." << std::endl;
+		else if (fileType == 4)
+			std::cerr << "Stb_image failed to load INVALID from memory." << std::endl;
+	}
 	else
 	{
 		std::cerr << "Stb_image successfully loaded texture from memory." << std::endl;
 		std::cerr << "Width_______| " << texture->width << std::endl;
 		std::cerr << "Height______| " << texture->height << std::endl;
 		std::cerr << "Composition_| " << texture->composition << std::endl;
-	}
+	}*/
 
 	// store the image inside the texture class as an unsigned char*
 	texture->image = image;
