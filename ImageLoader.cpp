@@ -32,7 +32,7 @@ Texture* ImageLoader::loadFromFile(const char* file)
 	return texture;
 }
 
-Texture* ImageLoader::loadFromMemory(void* buffer, int length)
+Texture* ImageLoader::loadFromMemory(void* buffer, int length, FileType fileType)
 {
 	Texture* texture = new Texture();
 	const stbi_uc* temp; // temp pointer used for converting the void* pointer to a format that stbi can read.

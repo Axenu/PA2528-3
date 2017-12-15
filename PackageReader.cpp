@@ -64,7 +64,23 @@ bool PackageReader::setPackage(const char* path) {
 		// Read file type
 		file.getline(temp, maxStringLength, ':');
 		baseOffset += strlen(temp) + 1;
-		// Currently unused
+		
+		// Set file type
+		if (strcmp(temp, "OBJ") == 0) {
+			metaData.data[i].fileType = OBJ;
+		}
+		else if (strcmp(temp, "FBX") == 0) {
+			metaData.data[i].fileType = FBX;
+		}
+		else if (strcmp(temp, "PNG") == 0) {
+			metaData.data[i].fileType = PNG;
+		}
+		else if (strcmp(temp, "TGA") == 0) {
+			metaData.data[i].fileType = TGA;
+		}
+		else {
+			metaData.data[i].fileType = INVALID;
+		}
 
 		// Read resource type
 		file.getline(temp, maxStringLength, ':');
@@ -125,7 +141,7 @@ Texture* PackageReader::loadTexture(gui_t gui) {
 	ImporterManager* importer = new ImporterManager();
 	Texture* texture = new Texture();	
 	
-	texture = importer->loadTextureFromMemory(mem.getPointer(), metaData.data[index].size);
+	texture = importer->loadTextureFromMemory(mem.getPointer(), metaData.data[index].size, metaData.data[index].fileType);
 
 	delete importer;
 
@@ -146,7 +162,7 @@ Mesh* PackageReader::loadMesh(gui_t gui) {
 
 	importer->initLoader(0); // ínit assimp
 
-	mesh = importer->loadMeshFromMemory(mem.getPointer(), metaData.data[index].size);
+	mesh = importer->loadMeshFromMemory(mem.getPointer(), metaData.data[index].size, metaData.data[index].fileType);
 
 	delete importer;
 
@@ -166,8 +182,6 @@ Array<PackageReader::MetaData> PackageReader::getMetaData() {
 
 bool PackageReader::openFile()
 {
-	// Remove buffer
-
 	file.open(packagePath);
 	if (!file.is_open()) {
 		char* msg = new char[1000];

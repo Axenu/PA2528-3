@@ -14,6 +14,8 @@
 #include "Mesh.hpp"
 #include "Texture.hpp"
 
+enum FileType;
+
 class AssimpLoader
 {
 
@@ -25,7 +27,7 @@ public:
 	bool importFromMemory(const void* buffer, size_t length);
 
 	Mesh* loadMeshFromFile(const std::string& objFile);
-	Mesh* loadMeshFromMemory(const void* buffer, size_t length);
+	Mesh* loadMeshFromMemory(const void* buffer, size_t length, FileType fileType);
 
 private:
 	void createLogger();

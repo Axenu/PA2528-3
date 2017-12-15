@@ -3,6 +3,10 @@
 
 #include "AssimpLoader.h"
 #include "ImageLoader.h"
+#include "PackageReader.hpp"
+
+class PackageReader;
+enum FileType;
 
 // Keeps track of the different importers
 // InitLoader(ImporterManager::Importers::loader_assimp) before loading meshes and models
@@ -27,11 +31,11 @@ public:
 
 	// assimp
 	Mesh* loadMeshFromFile(std::string file);
-	Mesh* loadMeshFromMemory(const void* buffer, size_t length);
+	Mesh* loadMeshFromMemory(const void* buffer, size_t length, FileType fileType);
 	
 	// stb_image
 	Texture* loadTextureFromFile(std::string file);
-	Texture* loadTextureFromMemory(void* buffer, int length);
+	Texture* loadTextureFromMemory(void* buffer, int length, FileType fileType);
 	
 	void freeTexture(Texture* texture);
 

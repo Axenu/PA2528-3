@@ -80,9 +80,9 @@ Mesh* ImporterManager::loadMeshFromFile(std::string file)
 	return m_loaderAssimp->loadMeshFromFile(file);
 }
 
-Mesh* ImporterManager::loadMeshFromMemory(const void* buffer, size_t length)
+Mesh* ImporterManager::loadMeshFromMemory(const void* buffer, size_t length, FileType fileType)
 {
-	return m_loaderAssimp->loadMeshFromMemory(buffer, length);
+	return m_loaderAssimp->loadMeshFromMemory(buffer, length, fileType);
 }
 
 Texture* ImporterManager::loadTextureFromFile(std::string file)
@@ -90,9 +90,9 @@ Texture* ImporterManager::loadTextureFromFile(std::string file)
 	return ImageLoader::loadFromFile(file.c_str());
 }
 
-Texture* ImporterManager::loadTextureFromMemory(void* buffer, int length)
+Texture* ImporterManager::loadTextureFromMemory(void* buffer, int length, FileType fileType)
 {
-	return ImageLoader::loadFromMemory(buffer, length);
+	return ImageLoader::loadFromMemory(buffer, length, fileType);
 }
 
 void ImporterManager::freeTexture(Texture* texture)

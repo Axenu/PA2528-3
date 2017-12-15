@@ -1,5 +1,5 @@
 #include "AssimpLoader.h"
-
+#include "types.h"
 
 
 AssimpLoader::AssimpLoader()
@@ -125,20 +125,27 @@ Mesh* AssimpLoader::loadMeshFromFile(const std::string& objFile)
 	return mesh;
 }
 
-Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length)
+Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length, FileType fileType)
 {
 	Mesh* mesh = new Mesh();
+
+	//Assimp::DefaultLogger::create("assimplog", Assimp::Logger::VERBOSE, aiDefaultLogStream::aiDefaultLogStream_STDOUT, NULL);
+	//Assimp::DefaultLogger::get()->info("this is my info-call");
+	
 
 	/*pHint	An additional hint to the library.
 	If this is a non empty string, the library looks for a loader to support the file extension specified by pHint and passes the file to the first matching loader.
 	If this loader is unable to completely the request, the library continues and tries to determine the file format on its own,
 	a task that may or may not be successful.Check the return value, and you'll know ...*/
 	m_scene = m_importer.ReadFileFromMemory(buffer, length, aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
-
+	
 	// check for errors
 	if (!m_scene)
 	{
 		logInfo(m_importer.GetErrorString());
+
+		//Assimp::DefaultLogger::kill();
+
 		return nullptr;
 	}
 
@@ -163,6 +170,8 @@ Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length)
 	{
 		mesh->aiMesh[i] = m_scene->mMeshes[i];
 	}
+
+	//Assimp::DefaultLogger::kill();
 
 	return mesh;
 }

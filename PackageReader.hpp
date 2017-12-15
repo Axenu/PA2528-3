@@ -12,6 +12,9 @@
 
 class Texture;
 class Mesh;
+enum FileType {
+	OBJ, FBX, TGA, PNG, INVALID
+};
 
 // The PackageReader does not handle asynchronous loading.
 // Its job is only to read a resource from a set package
@@ -27,6 +30,7 @@ class PackageReader {
                 INVALID,
             };
 
+			FileType fileType = INVALID;
             Type type = Type::INVALID;
             gui_t gui = 0;
 			size_t offset;	// Number of bytes from the first file in the package to the start of this file.
