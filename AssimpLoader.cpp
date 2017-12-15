@@ -32,7 +32,7 @@ bool AssimpLoader::importFromFile(const std::string& file)
 	m_scene = m_importer.ReadFile(file, aiProcessPreset_TargetRealtime_Quality);
 
 	// check for errors
-	if (!m_scene)
+	if (!!m_scene || m_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_scene->mRootNode)
 	{
 		logInfo(m_importer.GetErrorString());
 		return false;
@@ -64,7 +64,7 @@ bool AssimpLoader::importFromMemory(const void* buffer, size_t length)
 	m_scene = m_importer.ReadFileFromMemory(buffer, length, aiProcessPreset_TargetRealtime_Quality);
 
 	// check for errors
-	if (!m_scene)
+	if (!!m_scene || m_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_scene->mRootNode)
 	{
 		logInfo(m_importer.GetErrorString());
 		return false;
@@ -91,12 +91,22 @@ Mesh* AssimpLoader::loadMeshFromFile(const std::string& objFile)
 {
 	Mesh* mesh = new Mesh();
 
-	m_scene = m_importer.ReadFile(objFile, aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
+	//m_scene = m_importer.ReadFile(objFile, aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
+	//m_scene = m_importer.ReadFile(objFile, aiProcess_CalcTangentSpace |
+	//aiProcess_Triangulate |
+	//aiProcess_RemoveRedundantMaterials |
+	//aiProcess_OptimizeGraph |
+	//aiProcess_OptimizeMeshes |
+	//aiProcess_SplitLargeMeshes |
+	//aiProcess_JoinIdenticalVertices |
+	//aiProcess_ImproveCacheLocality);
+	m_scene = m_importer.ReadFile(objFile, aiProcess_Triangulate | aiProcess_SortByPType);
 
 	// check for errors
-	if (!m_scene)
+	if (!m_scene || m_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_scene->mRootNode)
 	{
 		logInfo(m_importer.GetErrorString());
+		std::cerr << "Assimp failed to import: " << objFile << std::endl;
 		return nullptr;
 	}
 
@@ -105,7 +115,7 @@ Mesh* AssimpLoader::loadMeshFromFile(const std::string& objFile)
 
 	// code used for debugging purposes.
 	// comment out or delete for better performance
-	std::cerr << "Assimp imported obj from : " << objFile << std::endl;
+	std::cerr << "Assimp imported obj from: " << objFile << std::endl;
 	std::cerr << "Meshes: " << m_scene->mNumMeshes << std::endl;
 	for (int i = 0; i < m_scene->mNumMeshes; ++i)
 	{
@@ -115,8 +125,10 @@ Mesh* AssimpLoader::loadMeshFromFile(const std::string& objFile)
 	}
 
 	// code for extracting the mesh from scene into the mesh class here
+	//mesh->aiMesh = m_scene->mMeshes[0];
+
 	mesh->numMeshes = m_scene->mNumMeshes;
-	
+
 	for (int i = 0; i < m_scene->mNumMeshes; ++i)
 	{
 		mesh->aiMesh[i] = m_scene->mMeshes[i];
@@ -133,12 +145,22 @@ Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length)
 	If this is a non empty string, the library looks for a loader to support the file extension specified by pHint and passes the file to the first matching loader.
 	If this loader is unable to completely the request, the library continues and tries to determine the file format on its own,
 	a task that may or may not be successful.Check the return value, and you'll know ...*/
-	m_scene = m_importer.ReadFileFromMemory(buffer, length, aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
+	//m_scene = m_importer.ReadFileFromMemory(buffer, length, aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType, "obj");
+	//m_scene = m_importer.ReadFile(objFile, aiProcess_CalcTangentSpace |
+	//aiProcess_Triangulate |
+	//aiProcess_RemoveRedundantMaterials |
+	//aiProcess_OptimizeGraph |
+	//aiProcess_OptimizeMeshes |
+	//aiProcess_SplitLargeMeshes |
+	//aiProcess_JoinIdenticalVertices |
+	//aiProcess_ImproveCacheLocality, "obj");
+	m_scene = m_importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_SortByPType, "obj");
 
 	// check for errors
-	if (!m_scene)
+	if (!m_scene || m_scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !m_scene->mRootNode)
 	{
 		logInfo(m_importer.GetErrorString());
+		std::cerr << "Assimp failed to import from memory: " << buffer << std::endl;
 		return nullptr;
 	}
 
@@ -157,6 +179,8 @@ Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length)
 	}
 
 	// code for extracting the mesh from scene into the mesh class here
+	//mesh->aiMesh = m_scene->mMeshes[0];
+
 	mesh->numMeshes = m_scene->mNumMeshes;
 
 	for (int i = 0; i < m_scene->mNumMeshes; ++i)
