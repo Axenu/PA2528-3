@@ -71,7 +71,7 @@ class HashMap {
     private:
         friend Iterator;
         static constexpr size_t TABLE_SIZE = 1024;
-        static_assert(isPow2(TABLE_SIZE));
+        static_assert(isPow2(TABLE_SIZE), "Table size must be power of two.");
         static const std::hash<Key> HASHER;
         Entry* mTable[TABLE_SIZE];
 };

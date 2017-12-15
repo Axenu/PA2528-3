@@ -199,6 +199,6 @@ void AssimpLoader::destroyLogger()
 void AssimpLoader::renderScene(const aiScene* scene)
 {
 	logInfo("rendering objects");
-	
+
 	// render code
 }

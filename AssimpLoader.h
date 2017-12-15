@@ -27,6 +27,7 @@ public:
 	bool importFromMemory(const void* buffer, size_t length);
 
 	Mesh* loadMeshFromFile(const std::string& objFile);
+
 	Mesh* loadMeshFromMemory(const void* buffer, size_t length, FileType fileType);
 
 private:
