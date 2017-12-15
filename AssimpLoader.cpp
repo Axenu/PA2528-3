@@ -1,6 +1,5 @@
 #include "AssimpLoader.h"
-#include "types.h"
-
+#include "assimp\types.h"
 
 AssimpLoader::AssimpLoader()
 {
@@ -131,14 +130,20 @@ Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length, FileTy
 
 	//Assimp::DefaultLogger::create("assimplog", Assimp::Logger::VERBOSE, aiDefaultLogStream::aiDefaultLogStream_STDOUT, NULL);
 	//Assimp::DefaultLogger::get()->info("this is my info-call");
-	
 
 	/*pHint	An additional hint to the library.
 	If this is a non empty string, the library looks for a loader to support the file extension specified by pHint and passes the file to the first matching loader.
 	If this loader is unable to completely the request, the library continues and tries to determine the file format on its own,
 	a task that may or may not be successful.Check the return value, and you'll know ...*/
-	m_scene = m_importer.ReadFileFromMemory(buffer, length, aiProcess_CalcTangentSpace | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices | aiProcess_SortByPType);
-	
+	switch (fileType) {
+	case 0: 
+		m_scene = m_importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_SortByPType, "OBJ");
+		break;
+	case 1:
+		m_scene = m_importer.ReadFileFromMemory(buffer, length, aiProcess_Triangulate | aiProcess_SortByPType, "FBX");
+		break;
+	}
+
 	// check for errors
 	if (!m_scene)
 	{
@@ -154,7 +159,11 @@ Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length, FileTy
 
 	// code used for debugging purposes.
 	// comment out or delete for better performance
-	std::cerr << "Assimp imported obj from memory: " << buffer << std::endl;
+	if(fileType == 0)
+		std::cerr << "Assimp imported OBJ from memory: " << buffer << std::endl;
+	else if(fileType == 1)
+		std::cerr << "Assimp imported FBX from memory: " << buffer << std::endl;
+
 	std::cerr << "Meshes: " << m_scene->mNumMeshes << std::endl;
 	for (int i = 0; i < m_scene->mNumMeshes; ++i)
 	{
