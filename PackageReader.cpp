@@ -14,11 +14,9 @@
 
 std::wstring PackageReader::packagePath;
 Array<PackageReader::MetaData> PackageReader::metaData;
-void* PackageReader::rawFile = nullptr;
 std::ifstream PackageReader::file;
 size_t PackageReader::baseOffset = 0;
 long PackageReader::sectorSize = 0;
-HANDLE PackageReader::fileHandle;
 
 
 // Return true if package is found and valid. Else false.
@@ -121,9 +119,6 @@ bool PackageReader::setPackage(const char* path) {
 
 // Clears the current package. Used when exiting application or switching package.
 void PackageReader::clearPackage() {
-	delete rawFile;
-	rawFile = nullptr;
-
 	delete[] metaData.data;
 	metaData.data = nullptr;
 	metaData.size = 0;
@@ -220,7 +215,7 @@ OffsetPointer<void> PackageReader::loadFile(gui_t gui, size_t& metaDataPos)
 			long* alignedMem = reinterpret_cast<long*>(reinterpret_cast<uintptr_t>(rawMem) + adjustment);
 
 
-			fileHandle = CreateFile(packagePath.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
+			HANDLE fileHandle = CreateFile(packagePath.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
 			HRESULT err = HRESULT_FROM_WIN32(GetLastError());
 
 			LONG signedOffset = static_cast<long>(metaData.data[i].offset + baseOffset);

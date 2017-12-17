@@ -68,13 +68,9 @@ class PackageReader {
 		static std::wstring packagePath;
 		static Array<MetaData> metaData;
 		static std::ifstream file;
-		static HANDLE fileHandle;
 
 		// The location of the beginning of the first file.
 		static size_t baseOffset;
-
-		// Contains a resource file copied from disk to be converted into a mesh/image.
-		static void* rawFile;
 
 		// Size of a sector on the C drive. Used for unbuffered reading.
 		static long sectorSize;

@@ -72,7 +72,7 @@ SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
     Entry<Mesh>** entryPtr = mMeshes.find(gui);
     if(!entryPtr) {
         // No such resource exists. Return default error mesh. TODO
-		std::cout << "Failed to load rescource, not found!" << std::endl;
+		std::cout << "Failed to load rescource " << gui << ", not found!" << std::endl;
         return nullptr;
     }
     Entry<Mesh>& entry = **entryPtr;

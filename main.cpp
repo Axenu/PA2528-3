@@ -151,8 +151,8 @@ int main()
 
 	std::cout << "loading 6042386530102251393 " << std::endl;
 	//Promise<SharedPtr<Mesh>> mp1 = ResourceManager::aloadMesh(6042386530102251393);
-	//Promise<SharedPtr<Mesh>> mp2= ResourceManager::aloadMesh(6042386530102251393);
-	//Promise<SharedPtr<Mesh>> mp3 = ResourceManager::aloadMesh(6042386530102251393);
+	Promise<SharedPtr<Texture>> mp2= ResourceManager::aloadTexture(9181609965336431992);
+	Promise<SharedPtr<Mesh>> mp3 = ResourceManager::aloadMesh(6042386530102251393);
 	Promise<SharedPtr<Mesh>> mp5 = ResourceManager::aloadMesh(6722305721597800034);
 	//Promise<SharedPtr<Texture>> mp5 = ResourceManager::aloadTexture(9181609965336431992);
 
