@@ -220,7 +220,7 @@ OffsetPointer<void> PackageReader::loadFile(gui_t gui, size_t& metaDataPos)
 			long* alignedMem = reinterpret_cast<long*>(reinterpret_cast<uintptr_t>(rawMem) + adjustment);
 
 
-			fileHandle = CreateFile(packagePath.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
+			fileHandle = CreateFile((LPCSTR)packagePath.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
 			HRESULT err = HRESULT_FROM_WIN32(GetLastError());
 
 			LONG signedOffset = static_cast<long>(metaData.data[i].offset + baseOffset);
