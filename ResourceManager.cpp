@@ -79,25 +79,27 @@ SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
 
     entry.lock.lock();
     SharedPtr<Mesh> mesh = entry.data;
-    entry.lock.unlock();
 
     if(mesh != nullptr) {
-        return mesh;
+		entry.lock.unlock();
+		return mesh;
     }
 
     if(!fitLimit(entry.size)) {
-        std::cerr << "Failed to load resource (" << gui << "). Memory limit exceeded." << std::endl;
+		entry.lock.unlock();
+		std::cerr << "Failed to load resource (" << gui << "). Memory limit exceeded." << std::endl;
         // Loading this resource will violate the memory limit. Return default texture. TODO
         return nullptr;
     }
 
     mesh = PackageReader::loadMesh(gui);
+	assert(*mesh->aiMesh != nullptr);
     if(mesh == nullptr) {
         // No such resource exists. Return default error mesh. TODO
+		entry.lock.unlock();
         return nullptr;
     }
 
-    entry.lock.lock();
     if(entry.data == nullptr) {
         entry.data = mesh;
         mSize += entry.size;
