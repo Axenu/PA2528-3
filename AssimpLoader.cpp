@@ -120,14 +120,34 @@ Mesh* AssimpLoader::loadMeshFromFile(const std::string& objFile)
 		aiMesh[i] = m_scene->mMeshes[i];
 	}
 
-	mesh->faces = m_scene->mMeshes[0]->mFaces;
 	mesh->numFaces = m_scene->mMeshes[0]->mNumFaces;
 
-	mesh->vertices = m_scene->mMeshes[0]->mVertices;
 	mesh->numVertices = m_scene->mMeshes[0]->mNumVertices;
 
 	mesh->textureCoords = m_scene->mMeshes[0]->mTextureCoords;
 	mesh->hasTextureCoords = m_scene->mMeshes[0]->HasTextureCoords(0);
+
+	//FAMESH CODE
+	mesh->faceArray = (unsigned int *)malloc(sizeof(unsigned int) * mesh->numFaces * 3);
+	unsigned int faceIndex = 0;
+
+	for (unsigned int t = 0; t < mesh->numFaces; ++t) {
+		aiFace face = m_scene->mMeshes[0]->mFaces[t];
+
+		memcpy(&mesh->faceArray[faceIndex], face.mIndices, 3 * sizeof(unsigned int));
+		faceIndex += 3;
+	}
+
+	for (unsigned int i = 0; i < mesh->numVertices; i++) {
+		mesh->vertices.push_back(m_scene->mMeshes[0]->mVertices[i].x);
+		mesh->vertices.push_back(m_scene->mMeshes[0]->mVertices[i].y);
+		mesh->vertices.push_back(m_scene->mMeshes[0]->mVertices[i].z);
+		if (mesh->hasTextureCoords) {
+			mesh->vertices.push_back(mesh->textureCoords[0][i].x);
+			mesh->vertices.push_back(mesh->textureCoords[0][i].y);
+		}
+	}
+	//
 
 	return mesh;
 }
@@ -189,14 +209,35 @@ Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length, FileTy
 		aiMesh[i] = m_scene->mMeshes[i];
 	}
 
-	mesh->faces = m_scene->mMeshes[0]->mFaces;
 	mesh->numFaces = m_scene->mMeshes[0]->mNumFaces;
 
-	mesh->vertices = m_scene->mMeshes[0]->mVertices;
 	mesh->numVertices = m_scene->mMeshes[0]->mNumVertices;
 
 	mesh->textureCoords = m_scene->mMeshes[0]->mTextureCoords;
 	mesh->hasTextureCoords = m_scene->mMeshes[0]->HasTextureCoords(0);
+
+	//FAMESH CODE
+	mesh->faceArray = (unsigned int *)malloc(sizeof(unsigned int) * mesh->numFaces * 3);
+	unsigned int faceIndex = 0;
+
+	for (unsigned int t = 0; t < mesh->numFaces; ++t) {
+		aiFace face = m_scene->mMeshes[0]->mFaces[t];
+
+		memcpy(&mesh->faceArray[faceIndex], face.mIndices, 3 * sizeof(unsigned int));
+		faceIndex += 3;
+	}
+
+	for (unsigned int i = 0; i < mesh->numVertices; i++) {
+		mesh->vertices.push_back(m_scene->mMeshes[0]->mVertices[i].x);
+		mesh->vertices.push_back(m_scene->mMeshes[0]->mVertices[i].y);
+		mesh->vertices.push_back(m_scene->mMeshes[0]->mVertices[i].z);
+		if (mesh->hasTextureCoords) {
+			mesh->vertices.push_back(mesh->textureCoords[0][i].x);
+			mesh->vertices.push_back(mesh->textureCoords[0][i].y);
+		}
+	}
+	//
+
 	//mesh->textureCoords[0] = m_scene->mMeshes[0]->mTextureCoords;
 
 	//Assimp::DefaultLogger::kill();
