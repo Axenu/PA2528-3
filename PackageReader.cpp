@@ -215,7 +215,7 @@ OffsetPointer<void> PackageReader::loadFile(gui_t gui, size_t& metaDataPos)
 			long* alignedMem = reinterpret_cast<long*>(reinterpret_cast<uintptr_t>(rawMem) + adjustment);
 
 
-			HANDLE fileHandle = CreateFile(packagePath.c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
+			HANDLE fileHandle = CreateFile(utf16ToUTF8(packagePath).c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
 			HRESULT err = HRESULT_FROM_WIN32(GetLastError());
 
 			LONG signedOffset = static_cast<long>(metaData.data[i].offset + baseOffset);
@@ -266,4 +266,14 @@ void PackageReader::findSectorSize()
 	CloseHandle(device);
 
 	sectorSize = alignment.BytesPerPhysicalSector;
+}
+
+std::string PackageReader::utf16ToUTF8(const std::wstring &s)
+{
+	const int size = ::WideCharToMultiByte(CP_UTF8, 0, s.c_str(), -1, NULL, 0, 0, NULL);
+
+	std::vector<char> buf(size);
+	::WideCharToMultiByte(CP_UTF8, 0, s.c_str(), -1, &buf[0], size, 0, NULL);
+
+	return std::string(&buf[0]);
 }

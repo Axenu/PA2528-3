@@ -53,6 +53,8 @@ class PackageReader {
         // Return metadata of every resource in the package. Caller is responsible for the memory of returned array.
         static Array<MetaData> getMetaData();
 
+		static std::string utf16ToUTF8(const std::wstring &s);
+
 	private:
 		// Opens and closes the package file.
 		static bool openFile();
