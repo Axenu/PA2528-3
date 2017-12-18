@@ -5,9 +5,16 @@
 
 class Mesh { // or struct - doesn't matter
 public:
-	aiMesh* aiMesh[2];
-	int numMeshes;
+	aiFace* faces;
+	unsigned int numFaces;
+
+	aiVector3D* vertices;
+	unsigned int numVertices;
+
+	aiVector3D** textureCoords;
+	unsigned int numTextureCoords;
+	bool hasTextureCoords;
+
+	unsigned int size, memAllocated;
 };
 #endif // __MESH__
-
-

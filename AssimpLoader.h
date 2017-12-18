@@ -11,6 +11,7 @@
 #include "assimp\postprocess.h"	// post processing flags
 #include "assimp\LogStream.hpp"
 
+//#include <Game\FAMesh.h>
 #include "Mesh.hpp"
 #include "Texture.hpp"
 
@@ -26,6 +27,14 @@ public:
 	bool importFromFile(const std::string& file);
 	bool importFromMemory(const void* buffer, size_t length);
 
+	/*Mesh* loadMeshFromFile(const std::string& objFile);
+
+	Mesh* loadMeshFromMemory(const void* buffer, size_t length, FileType fileType);*/
+
+	/*Mesh* loadMeshFromFile(const std::string& objFile);
+
+	Mesh* loadMeshFromMemory(const void* buffer, size_t length, FileType fileType);
+	*/
 	Mesh* loadMeshFromFile(const std::string& objFile);
 
 	Mesh* loadMeshFromMemory(const void* buffer, size_t length, FileType fileType);
@@ -34,9 +43,13 @@ private:
 	void createLogger();
 	void destroyLogger();
 	void logInfo(std::string log) // add message to file with "info" tag
-		{ Assimp::DefaultLogger::get()->info(log.c_str()); }
+	{
+		Assimp::DefaultLogger::get()->info(log.c_str());
+	}
 	void logDebug(std::string log) // add message to file with "debug" tag
-		{ Assimp::DefaultLogger::get()->debug(log.c_str()); }
+	{
+		Assimp::DefaultLogger::get()->debug(log.c_str());
+	}
 
 	void renderScene(const aiScene* scene); // draw the scene
 

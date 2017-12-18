@@ -93,7 +93,7 @@ SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
     }
 
     mesh = PackageReader::loadMesh(gui);
-	assert(*mesh->aiMesh != nullptr);
+	assert(mesh != nullptr);
     if(mesh == nullptr) {
         // No such resource exists. Return default error mesh. TODO
 		entry.lock.unlock();
