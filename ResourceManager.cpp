@@ -72,21 +72,30 @@ SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
     Entry<Mesh>** entryPtr = mMeshes.find(gui);
     if(!entryPtr) {
         // No such resource exists. Return default error mesh. TODO
-		std::cout << "Failed to load rescource " << gui << ", not found!" << std::endl;
+		std::cout << "Failed to load rescource, not found!" << std::endl;
         return nullptr;
     }
     Entry<Mesh>& entry = **entryPtr;
 
     entry.lock.lock();
     SharedPtr<Mesh> mesh = entry.data;
+	entry.lock.unlock();
 
     if(mesh != nullptr) {
-		entry.lock.unlock();
 		return mesh;
     }
 
-    if(!fitLimit(entry.size)) {
-		entry.lock.unlock();
+	entry.mutex.wait();
+	entry.lock.lock();
+	mesh = entry.data;
+	entry.lock.unlock();
+
+	if (mesh != nullptr) {
+		entry.mutex.signal();
+		return mesh;
+	}
+
+	if(!fitLimit(entry.size)) {
 		std::cerr << "Failed to load resource (" << gui << "). Memory limit exceeded." << std::endl;
         // Loading this resource will violate the memory limit. Return default texture. TODO
         return nullptr;
@@ -96,18 +105,15 @@ SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
 	assert(*mesh->aiMesh != nullptr);
     if(mesh == nullptr) {
         // No such resource exists. Return default error mesh. TODO
-		entry.lock.unlock();
         return nullptr;
     }
 
-    if(entry.data == nullptr) {
-        entry.data = mesh;
-        mSize += entry.size;
-    }
-    else {
-        mesh = entry.data;
-    }
-    entry.lock.unlock();
+	entry.lock.lock();
+	assert(entry.data == nullptr);
+	entry.data = mesh;
+	entry.lock.unlock();
+	entry.mutex.signal();
+	mSize += entry.size;
 
     return mesh;
 }
@@ -117,7 +123,28 @@ Promise<SharedPtr<Texture>> ResourceManager::aloadTexture(gui_t gui) {
 }
 
 Promise<SharedPtr<Mesh>> ResourceManager::aloadMesh(gui_t gui) {
-    return ThreadPool::promise<SharedPtr<Mesh>>([gui](){return loadMesh(gui);});
+	Entry<Mesh>** entryPtr = mMeshes.find(gui);
+	assert(entryPtr != nullptr);
+	Entry<Mesh>& entry = **entryPtr;
+
+	entry.lock.lock();
+	if (entry.data != nullptr) {
+		Promise<SharedPtr<Mesh>> promise = entry.promise;
+		entry.lock.unlock();
+		return promise;
+		
+	}
+	if (!entry.mutex.wait(0)) {
+		Promise<SharedPtr<Mesh>> promise = entry.promise;
+		entry.lock.unlock();
+		return promise;
+	}
+	entry.mutex.signal();
+
+	entry.promise = ThreadPool::promise<SharedPtr<Mesh>>([gui](){return loadMesh(gui);});
+	assert(entry.data == nullptr);
+	entry.lock.unlock();
+	return entry.promise;
 }
 
 

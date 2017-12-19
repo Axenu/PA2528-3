@@ -44,10 +44,12 @@ class ResourceManager {
     private:
         template<typename T>
         struct Entry {
-            Entry(size_t s) : size(s) {}
+            Entry(size_t s) : size(s), mutex(1), promise(nullptr, nullptr, Semaphore()) {}
             SpinLock lock;
             SharedPtr<T> data;
             size_t size;
+			Semaphore mutex; // cba to implement proper Mutex class
+			Promise<SharedPtr<T>> promise;
         };
         static HashMap<gui_t, Entry<Texture>*> mTextures;
         static HashMap<gui_t, Entry<Mesh>*> mMeshes;
