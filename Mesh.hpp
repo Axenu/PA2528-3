@@ -2,12 +2,20 @@
 #define __MESH__
 
 #include "assimp\mesh.h"
+#include <vector>
 
 class Mesh { // or struct - doesn't matter
 public:
-	aiMesh* aiMesh[2];
-	int numMeshes;
+	unsigned int *faceArray;
+	unsigned int numFaces;
+
+	std::vector<float> vertices;
+	unsigned int numVertices;
+
+	aiVector3D** textureCoords;
+	unsigned int numTextureCoords;
+	bool hasTextureCoords;
+
+	unsigned int size, memAllocated;
 };
 #endif // __MESH__
-
-
