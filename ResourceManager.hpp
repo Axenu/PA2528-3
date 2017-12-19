@@ -38,6 +38,9 @@ class ResourceManager {
 
         static void setMemoryLimit(size_t limit);
 
+		// Returns a float [0, 1] representing how close to the memory limit the resource manager is.
+		static float getMemoryFillRatio();
+
     private:
         static bool fitLimit(size_t loadSize);
 

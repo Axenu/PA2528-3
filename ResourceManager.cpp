@@ -161,6 +161,11 @@ void ResourceManager::setMemoryLimit(size_t limit) {
     mSizeLimit = limit;
 }
 
+float ResourceManager::getMemoryFillRatio()
+{
+	return mSize.load() / (float) mSizeLimit;
+}
+
 bool ResourceManager::fitLimit(size_t loadSize) {
     if((mSize.load() + loadSize) <= mSizeLimit) {
         return true;
