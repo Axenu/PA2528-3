@@ -28,127 +28,26 @@ void ResourceManager::initialize() {
 }
 
 SharedPtr<Texture> ResourceManager::loadTexture(gui_t gui) {
-    Entry<Texture>** entryPtr = mTextures.find(gui);
-    if(!entryPtr) {
-        // No such resource exists. Return default error texture. TODO
-        return nullptr;
-    }
-    Entry<Texture>& entry = **entryPtr;
-
-    entry.lock.lock();
-    SharedPtr<Texture> texture = entry.data;
-    entry.lock.unlock();
-
-    if(texture != nullptr) {
-		MemoryTracker::incrementResourceManagerCacheHits();
-        return texture;
-    }
-	MemoryTracker::incrementResourceManagerCacheMisses();
-
-    if(!fitLimit(entry.size)) {
-        std::cerr << "Failed to load resource (" << gui << "). Memory limit exceeded." << std::endl;
-        // Loading this resource will violate the memory limit. Return default texture. TODO
-        return nullptr;
-    }
-
-    texture = PackageReader::loadTexture(gui);
-    if(texture == nullptr) {
-        // No such resource exists. Return default error texture. TODO
-        return nullptr;
-    }
-
-    entry.lock.lock();
-    if(entry.data == nullptr) {
-        entry.data = texture;
-        mSize += entry.size;
-    }
-    else {
-        texture = entry.data;
-    }
-    entry.lock.unlock();
-
-    return texture;
+	return load(mTextures, gui);
 }
 
 SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
-	Entry<Mesh>** entryPtr = mMeshes.find(gui);
-	if (!entryPtr) {
-		// No such resource exists. Return default error mesh. TODO
-		std::cout << "Failed to load rescource, not found!" << std::endl;
-		return nullptr;
-	}
-	Entry<Mesh>& entry = **entryPtr;
-
-	entry.lock.lock();
-	SharedPtr<Mesh> mesh = entry.data;
-
-	if (mesh != nullptr) {
-		entry.lock.unlock();
-		MemoryTracker::incrementResourceManagerCacheHits();
-		return mesh;
-	}
-	MemoryTracker::incrementResourceManagerCacheMisses();
-
-	if (entry.promise != nullptr) {
-		Promise<SharedPtr<Mesh>> promise = *entry.promise;
-		entry.lock.unlock();
-		return promise.get();
-	}
-
-	std::cout << "loading " << gui << std::endl;
-	SharedPtr<SharedPtr<SharedPtr<Mesh>>> promise(new SharedPtr<SharedPtr<Mesh>>(new SharedPtr<Mesh>()));
-	SharedPtr<bool> isReady(new bool());
-	*isReady = false;
-	Semaphore semaphore;
-	entry.promise = new Promise<SharedPtr<Mesh>>(promise, isReady, semaphore);
-
-	entry.lock.unlock();
-	
-	if (!fitLimit(entry.size)) {
-		std::cerr << "Failed to load resource (" << gui << "). Memory limit exceeded." << std::endl;
-		// Loading this resource will violate the memory limit. Return default texture. TODO
-		return nullptr;
-	}
-
-	mesh = PackageReader::loadMesh(gui);
-	assert(mesh != nullptr);
-	if (mesh == nullptr) {
-		// No such resource exists. Return default error mesh. TODO
-		return nullptr;
-	}
-
-	entry.lock.lock();
-	assert(entry.data == nullptr);
-	entry.data = mesh;
-	*promise = new SharedPtr<Mesh>(mesh);
-	assert(entry.data.getReferenceCount() == 3);
-	std::cout << "finished " << gui << std::endl;
-	entry.lock.unlock();
-
-	*isReady = true;
-	semaphore.signal();
-	mSize += entry.size;
-
-	return mesh;
+	return load(mMeshes, gui);
 }
+
 Promise<SharedPtr<Texture>> ResourceManager::aloadTexture(gui_t gui) {
-    return ThreadPool::promise<SharedPtr<Texture>>([gui](){return loadTexture(gui);});
+	SharedPtr<Promise<SharedPtr<Texture>>> promise = getExistingPromise(mTextures, gui);
+	if (promise != nullptr) {
+		return *promise;
+	}
+	return ThreadPool::promise<SharedPtr<Texture>>([gui](){return loadTexture(gui);});
 }
 
 Promise<SharedPtr<Mesh>> ResourceManager::aloadMesh(gui_t gui) {
-	Entry<Mesh>** entryPtr = mMeshes.find(gui);
-	assert(entryPtr != nullptr);
-	Entry<Mesh>& entry = **entryPtr;
-
-	entry.lock.lock();
-	if (entry.promise != nullptr) {
-		Promise<SharedPtr<Mesh>> promise = *entry.promise;
-		entry.lock.unlock();
-		return promise;
+	SharedPtr<Promise<SharedPtr<Mesh>>> promise = getExistingPromise(mMeshes, gui);
+	if (promise != nullptr) {
+		return *promise;
 	}
-	assert(entry.data == nullptr);
-	entry.lock.unlock();
-
 	return ThreadPool::promise<SharedPtr<Mesh>>([gui]() {return loadMesh(gui);});
 }
 
@@ -163,30 +62,16 @@ void ResourceManager::aloadMesh(gui_t gui, Function<void(SharedPtr<Mesh>)> callb
 
 
 void ResourceManager::garbageCollectTextures() {
-    for(Entry<Texture>* entry : mTextures) {
-        entry->lock.lock();
-        if(entry->data.getReferenceCount() == 1) {
-            entry->data = nullptr;
-            mSize -= entry->size;
-        }
-        entry->lock.unlock();
-    }
+	garbageCollect(mTextures);
 }
 
 void ResourceManager::garbageCollectMeshes() {
-    for(Entry<Mesh>* entry : mMeshes) {
-        entry->lock.lock();
-        if(entry->data.getReferenceCount() == 1) {
-            entry->data = nullptr;
-            mSize -= entry->size;
-        }
-        entry->lock.unlock();
-    }
+	garbageCollect(mMeshes);
 }
 
 void ResourceManager::garbageCollect() {
-    garbageCollectTextures();
-    garbageCollectMeshes();
+	garbageCollectMeshes();
+	garbageCollectTextures();
 }
 
 void ResourceManager::setMemoryLimit(size_t limit) {
@@ -205,4 +90,15 @@ bool ResourceManager::fitLimit(size_t loadSize) {
 
     garbageCollect();
     return (mSize.load() + loadSize) <= mSizeLimit;
+}
+
+
+template<>
+inline Mesh* ResourceManager::packageLoad<Mesh>(gui_t gui) {
+	return PackageReader::loadMesh(gui);
+}
+
+template<>
+inline Texture* ResourceManager::packageLoad<Texture>(gui_t gui) {
+	return PackageReader::loadTexture(gui);
 }
