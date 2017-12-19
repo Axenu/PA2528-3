@@ -1,6 +1,7 @@
 #include "ResourceManager.hpp"
 #include "PackageReader.hpp"
 #include "ThreadPool.hpp"
+#include "MemoryTracker.hpp"
 
 HashMap<gui_t, ResourceManager::Entry<Texture>*> ResourceManager::mTextures;
 HashMap<gui_t, ResourceManager::Entry<Mesh>*> ResourceManager::mMeshes;
@@ -40,8 +41,10 @@ SharedPtr<Texture> ResourceManager::loadTexture(gui_t gui) {
     entry.lock.unlock();
 
     if(texture != nullptr) {
+		MemoryTracker::incrementResourceManagerCacheHits();
         return texture;
     }
+	MemoryTracker::incrementResourceManagerCacheMisses();
 
     if(!fitLimit(entry.size)) {
         std::cerr << "Failed to load resource (" << gui << "). Memory limit exceeded." << std::endl;
@@ -81,9 +84,12 @@ SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
     SharedPtr<Mesh> mesh = entry.data;
 
     if(mesh != nullptr) {
+		MemoryTracker::incrementResourceManagerCacheHits()
 		entry.lock.unlock();
 		return mesh;
     }
+	MemoryTracker::incrementResourceManagerCacheMisses();
+
 
     if(!fitLimit(entry.size)) {
 		entry.lock.unlock();
@@ -159,6 +165,11 @@ void ResourceManager::garbageCollect() {
 
 void ResourceManager::setMemoryLimit(size_t limit) {
     mSizeLimit = limit;
+}
+
+float ResourceManager::getMemoryFillRatio()
+{
+	return mSize.load() / (float)mSizeLimit;
 }
 
 bool ResourceManager::fitLimit(size_t loadSize) {
