@@ -40,8 +40,10 @@ SharedPtr<Texture> ResourceManager::loadTexture(gui_t gui) {
     entry.lock.unlock();
 
     if(texture != nullptr) {
+		MemoryTracker::incrementResourceManagerCacheHits();
         return texture;
     }
+	MemoryTracker::incrementResourceManagerCacheMisses();
 
     if(!fitLimit(entry.size)) {
         std::cerr << "Failed to load resource (" << gui << "). Memory limit exceeded." << std::endl;
@@ -82,8 +84,10 @@ SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
 
     if(mesh != nullptr) {
 		entry.lock.unlock();
+		MemoryTracker::incrementResourceManagerCacheHits();
 		return mesh;
     }
+	MemoryTracker::incrementResourceManagerCacheMisses();
 
     if(!fitLimit(entry.size)) {
 		entry.lock.unlock();

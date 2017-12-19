@@ -13,6 +13,8 @@
 #include "Function.hpp"
 #include "Atomic.hpp"
 
+#include "PA2528-2/MemoryTracker.h"
+
 // Asynchronous operations are handled by the ResourceManager. Not the PackageReader.
 class ResourceManager {
     public:
