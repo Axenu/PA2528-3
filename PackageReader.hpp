@@ -10,6 +10,8 @@
 #include "OffsetPointer.hpp"
 #include "ImporterManager.h"
 
+#include "PA2528-2/PoolAllocator.h" // Pool allocator color depending on fragmentation
+
 class Texture;
 class Mesh;
 enum FileType {

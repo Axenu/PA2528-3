@@ -216,7 +216,7 @@ Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length, FileTy
 	mesh->textureCoords = m_scene->mMeshes[0]->mTextureCoords;
 	mesh->hasTextureCoords = m_scene->mMeshes[0]->HasTextureCoords(0);
 
-	//FAMESH CODE
+	// FAMesh code
 	mesh->faceArray = (unsigned int *)malloc(sizeof(unsigned int) * mesh->numFaces * 3);
 	unsigned int faceIndex = 0;
 
@@ -236,9 +236,7 @@ Mesh* AssimpLoader::loadMeshFromMemory(const void* buffer, size_t length, FileTy
 			mesh->vertices.push_back(mesh->textureCoords[0][i].y);
 		}
 	}
-	//
-
-	//mesh->textureCoords[0] = m_scene->mMeshes[0]->mTextureCoords;
+	// FAMesh code end
 
 	//Assimp::DefaultLogger::kill();
 
