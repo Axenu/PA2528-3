@@ -82,8 +82,10 @@ SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
 	entry.lock.unlock();
 
     if(mesh != nullptr) {
+		MemoryTracker::incrementResourceManagerCacheHits();
 		return mesh;
     }
+	MemoryTracker::incrementResourceManagerCacheMisses(); 
 
 	entry.mutex.wait();
 	entry.lock.lock();
