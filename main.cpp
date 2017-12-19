@@ -38,7 +38,7 @@ void testUnbuffered(bool unbuffered) {
 	std::cout << "Testing " << (unbuffered ? "un" : "") << "buffered input\n";
 
 	// Write
-	HANDLE file = CreateFile(L"buftest", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_FLAG_NO_BUFFERING, NULL);
+	HANDLE file = CreateFile("buftest", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_FLAG_NO_BUFFERING, NULL);
 
 	void* rawMem = malloc(alignment.BytesPerPhysicalSector * 2);
 
@@ -56,9 +56,9 @@ void testUnbuffered(bool unbuffered) {
 
 	// Read
 	if (unbuffered)
-		file = CreateFile(L"buftest", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
+		file = CreateFile("buftest", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
 	else
-		file = CreateFile(L"buftest", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		file = CreateFile("buftest", GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	SetFilePointer(file, 0, NULL, FILE_BEGIN);
 

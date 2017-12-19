@@ -16,6 +16,6 @@ public:
 	unsigned int numTextureCoords;
 	bool hasTextureCoords;
 
-	unsigned int size, memAllocated;
+	size_t memUsed, memAllocated;
 };
 #endif // __MESH__

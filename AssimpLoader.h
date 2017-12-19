@@ -11,7 +11,6 @@
 #include "assimp\postprocess.h"	// post processing flags
 #include "assimp\LogStream.hpp"
 
-//#include <Game\FAMesh.h>
 #include "Mesh.hpp"
 #include "Texture.hpp"
 

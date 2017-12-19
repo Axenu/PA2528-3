@@ -18,6 +18,8 @@ std::ifstream PackageReader::file;
 size_t PackageReader::baseOffset = 0;
 long PackageReader::sectorSize = 0;
 
+PoolAllocator* pool;
+int poolSize = 8;
 
 // Return true if package is found and valid. Else false.
 bool PackageReader::setPackage(const char* path) {
@@ -152,17 +154,52 @@ Mesh* PackageReader::loadMesh(gui_t gui) {
 		return nullptr;
 
 	// Read memory data into new mesh (assimp)
-	Mesh* mesh = new Mesh();
 	ImporterManager* importer = new ImporterManager();
 
 	importer->initLoader(0); // ínit assimp
 
+	if (!pool)
+	{
+		pool = new PoolAllocator(sizeof(Mesh), poolSize);
+		pool->setTrackingName("PoolAllocator Meshes");
+	}
+
+	Mesh* mesh = pool->alloc<Mesh>();
 	mesh = importer->loadMeshFromMemory(mem.getPointer(), metaData.data[index].size, metaData.data[index].fileType);
+	//Get memory allocated for the mesh
+	//std::vector<AllocatorInfo> infos = MemoryTracker::getAllocatorsInfo();
+
+	mesh->memUsed = _msize(mesh);
+	mesh->memAllocated = _msize(mesh) + 1; // wip
+
+	std::cerr << "Size of mesh: " << mesh->memUsed << std::endl;
+	std::cerr << "Memory Allocated: " << mesh->memAllocated << std::endl;
+
 
 	delete importer;
 
 	return mesh;	// return mesh
 }
+
+//Mesh* PackageReader::loadMesh(gui_t gui) {
+//	size_t index = 0;
+//	OffsetPointer<void> mem = loadFile(gui, index);
+//
+//	if (!mem.getPointer())
+//		return nullptr;
+//
+//	// Read memory data into new mesh (assimp)
+//	Mesh* mesh = new Mesh();
+//	ImporterManager* importer = new ImporterManager();
+//
+//	importer->initLoader(0); // ínit assimp
+//
+//	mesh = importer->loadMeshFromMemory(mem.getPointer(), metaData.data[index].size, metaData.data[index].fileType);
+//
+//	delete importer;
+//
+//	return mesh;	// return mesh
+//}
 
 // Return array of all GUIs in the package. Caller is responsible for the memory of returned array.
 Array<PackageReader::MetaData> PackageReader::getMetaData() {
@@ -213,7 +250,6 @@ OffsetPointer<void> PackageReader::loadFile(gui_t gui, size_t& metaDataPos)
 			unsigned int adjustment = sectorSize - misalignedBytes;
 
 			long* alignedMem = reinterpret_cast<long*>(reinterpret_cast<uintptr_t>(rawMem) + adjustment);
-
 
 			HANDLE fileHandle = CreateFile(utf16ToUTF8(packagePath.c_str()).c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_FLAG_NO_BUFFERING, NULL);
 			HRESULT err = HRESULT_FROM_WIN32(GetLastError());
