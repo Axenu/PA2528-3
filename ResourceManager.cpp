@@ -40,10 +40,10 @@ SharedPtr<Texture> ResourceManager::loadTexture(gui_t gui) {
     entry.lock.unlock();
 
     if(texture != nullptr) {
-		MemoryTracker::IncrementResourceManagerCacheHits();
+		MemoryTracker::incrementResourceManagerCacheHits();
         return texture;
     }
-	MemoryTracker::IncrementResourceManagerCacheMisses();
+	MemoryTracker::incrementResourceManagerCacheMisses();
 
     if(!fitLimit(entry.size)) {
         std::cerr << "Failed to load resource (" << gui << "). Memory limit exceeded." << std::endl;
@@ -84,10 +84,10 @@ SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
 	entry.lock.unlock();
 
 	if (mesh != nullptr) {
-		MemoryTracker::IncrementResourceManagerCacheHits();
+		MemoryTracker::incrementResourceManagerCacheHits();
 		return mesh;
 	}
-	MemoryTracker::IncrementResourceManagerCacheMisses();
+	MemoryTracker::incrementResourceManagerCacheMisses();
 
 	entry.mutex.wait();
 	entry.lock.lock();
@@ -106,7 +106,7 @@ SharedPtr<Mesh> ResourceManager::loadMesh(gui_t gui) {
 	}
 
 	mesh = PackageReader::loadMesh(gui);
-	assert(*mesh->aiMesh != nullptr);
+	assert(mesh != nullptr);
 	if (mesh == nullptr) {
 		// No such resource exists. Return default error mesh. TODO
 		return nullptr;
