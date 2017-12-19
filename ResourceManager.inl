@@ -83,8 +83,16 @@ SharedPtr<Promise<SharedPtr<T>>> ResourceManager::getExistingPromise(HashMap<gui
 	Entry<T>& entry = **entryPtr;
 
 	entry.lock.lock();
+	SharedPtr<T> res = entry.data;
 	SharedPtr<Promise<SharedPtr<T>>> promise = entry.promise;
 	entry.lock.unlock();
+
+	if (res == nullptr) {
+		MemoryTracker::incrementResourceManagerCacheMisses();
+	}
+	else {
+		MemoryTracker::incrementResourceManagerCacheHits();
+	}
 
 	return promise;
 }
